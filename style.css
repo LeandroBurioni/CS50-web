@@ -1,0 +1,60 @@
+.links{
+    text-align: right;
+}
+
+.search{
+    text-align: center;
+}
+.container {
+    max-width: none !important;
+    width: 970px;
+}
+
+a{
+    font-size: small;
+    font-family: sans-serif;
+    color: #000;
+}
+a:hover{
+    text-decoration: underline;
+    color: #666666;
+}
+
+#button {
+    display: inline-block;
+    background-color:#e6e6e6;
+    border: 1px solid #e6e6e6;
+    color:#808080;
+    border-radius: 4px;
+    size: 10px;
+    text-align: center;
+    font-size: small;
+}
+
+#button:hover{
+    color: #000;
+    border: 1px solid #666666;
+}
+
+#AdvancedButton{
+    background-color: #4d90fe;
+    color: #fff;
+    font-weight: bold;
+    text-align: right;
+    border-color: #3079ed;
+}
+
+#AdvancedButton:hover{
+    background-color: #4787ed;
+    color: #fff;
+}
+
+img{
+    width: 80%;
+}
+
+
+#SearchBar {
+    width: 80%;
+    border-radius: 5px;
+}
