@@ -2,7 +2,48 @@
 <html lang="en">
     <head>
         <title>Google Advanced Search</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="icon" type="image/png" href="img/favicon.png">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+         <link rel="stylesheet" href="style.css">
+        <style>
+            *{
+                text-align: left;
+            }
+            input[type=text] {
+                background: none;
+                padding-left: 2px;
+            }      
+
+            .title>p{
+                color: red; 
+                font-size: large; 
+            }  
+
+            .hide{
+               color: #666666;
+               font-size: small;
+               }
+            
+            .search{
+                padding-left: 40px;
+            }
+
+            #button{
+                background-color: #4d90fe;
+                color: #fff;
+                font-weight: bold;
+                text-align: right;
+                border-color: #3079ed;
+                }
+            #button:hover {
+                background-color: #4787ed;
+                color: #fff;
+            }
+
+            #SearchBar{
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -11,13 +52,36 @@
                 <a href="http://google.com">Original Google</a>
             </div>
             <div class="search">
-                <form action="https://google.com/search" >
-                    <p>All this words:<input type="text" name="as_q" id="SearchBar"></p>
-                    <p>This exact word or phrase:<input type="text" name="as_epq" id="SearchBar"></p>
-                    <p>Any of these words:<input type="text" name="as_oq" id="SearchBar"></p>  
-                    <p>None of these words:<input type="text" name="as_eq" id="SearchBar"></p>            
-                    <br>
-                    <input type="submit" id="AdvancedButton" value="Advanced Search">
+                <div class="title">
+                    <p>Advanced Search</p>
+                </div>
+                <hr><br>
+                <form action="https://google.com/search">
+                <div class="row">
+                    <div class="col-3">
+                        <p style="font-size: larger;">Find pages with...</p>
+                        <p>all this words:</p>
+                        <p>this exact word or phrase:</p>
+                        <p>any of these words:</p>
+                        <p>none of these words:</p>
+                    </div>
+                    <div class="col-6 SearchBar">
+                        <br>
+                        <p><input type="text" name="as_q" id="SearchBar"></p>
+                        <p><input type="text" name="as_epq" id="SearchBar"></p>
+                        <p><input type="text" name="as_oq" id="SearchBar"></p>
+                        <p><input type="text" name="as_eq" id="SearchBar"></p>
+                        <p style="text-align:right"><input type="submit" id="button" value="Advanced Search"></p>
+                    </div>
+                    <div class="col-3 d-none d-lg-block">
+                        <p style="font-weight: bold;" class="hide">To do this in the search box.</p>
+                        <p class="hide">Type the important words</p>
+                        <p class="hide">Put exact words in quotes</p>
+                        <p class="hide">Type OR between all the words you want</p>
+                        <p class="hide">Put a minus sign just before words that you don't want</p>
+                    </div>
+                </div> 
+
             </div>
         </div>
         
