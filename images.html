@@ -3,7 +3,11 @@
     <head>
         <title>Google Images</title>
         <link rel="stylesheet" href="style.css">
-
+        <style>
+            p{
+                color: #3079ed;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -12,6 +16,10 @@
                 <a href="http://google.com">Original Google</a>
             </div>
             <div class="search">
+                <div class="doodle" style="position:relative;">
+                    <img src="img/doodle.jpg">
+                    <p style="position: absolute; top: 74%; right: 26%;">Images</p>
+                </div>
                 <form action="https://www.google.com.ar/search" >
                     <input type="hidden" name="tbm" value="isch">
                     <input type="text" name="q" id="SearchBar">
