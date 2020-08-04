@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Google</title>
+        <title>Google Advanced Search</title>
     </head>
     <body>
         <div class="container">
@@ -10,10 +10,13 @@
                 <a href="advanced.html">Advanced Search</a>
             </div>
             <div class="search">
-                <form action="https://google.com/search">
-                    <input type="text" name="q">
-                    <input type="submit" value="Google Search">
-                </form>
+                <form action="https://google.com/search" >
+                    <p>All this words:<input type="text" name="as_q" id="SearchBar"></p>
+                    <p>This exact word or phrase:<input type="text" name="as_epq" id="SearchBar"></p>
+                    <p>Any of these words:<input type="text" name="as_oq" id="SearchBar"></p>  
+                    <p>None of these words:<input type="text" name="as_eq" id="SearchBar"></p>            
+                    <br>
+                    <input type="submit" id="button" value="Advanced Search">
             </div>
         </div>
         
