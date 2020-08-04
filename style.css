@@ -50,11 +50,12 @@ a:hover{
 }
 
 img{
-    width: 80%;
+    width: 60%;
 }
 
 
 #SearchBar {
-    width: 80%;
+    width: 50%;
     border-radius: 5px;
+    border: 1px solid #e6e6e6;
 }
