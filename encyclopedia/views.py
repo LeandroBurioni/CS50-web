@@ -34,7 +34,7 @@ def python(request):
         "entry": util.get_entry("Python")
     })
 
-def noesta(request, noesta):
-    return render(request, "encyclopedia/noesta.html",{
-        "noesta": noesta
+def notfound(request, search):
+    return render(request, "encyclopedia/notfound.html",{
+        "search": search
     })

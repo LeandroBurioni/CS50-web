@@ -10,7 +10,7 @@ urlpatterns = [
     path("wiki/Git", views.git, name="git"),
     path("wiki/HTML", views.html, name="html"),
     path("wiki/Python", views.python, name="python"),
-    path("wiki/<str:noesta>", views.noesta, name="noesta"),
+    path("wiki/<str:search>", views.notfound, name="notfound"),
     
 
     
