@@ -6,17 +6,17 @@ from . import util
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": util.list_entries(), 
     })
 
 def css(request):
     return render(request, "encyclopedia/css.html", {
-        "entry": util.get_entry("CSS")
+        "entry": util.get_entry("css")
     })
 
 def django(request):
     return render(request, "encyclopedia/django.html", {
-        "entry": util.get_entry("Django")
+        "entry": util.get_entry("django")
     })
 
 def git(request):

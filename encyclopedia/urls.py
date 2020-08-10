@@ -2,14 +2,16 @@ from django.urls import path
 
 from . import views
 
+app_name = "encyclopedia"
 urlpatterns = [
     path("", views.index, name="index"),
-    path("wiki/css", views.css, name="css"),
-    path("wiki/django", views.django, name="django"),
-    path("wiki/git", views.git, name="git"),
-    path("wiki/html", views.html, name="html"),
-    path("wiki/python", views.python, name="python"),
-    path("wiki/<str:noesta>", views.noesta, name="noesta")
+    path("wiki/CSS", views.css, name="css"),
+    path("wiki/Django", views.django, name="django"),
+    path("wiki/Git", views.git, name="git"),
+    path("wiki/HTML", views.html, name="html"),
+    path("wiki/Python", views.python, name="python"),
+    path("wiki/<str:noesta>", views.noesta, name="noesta"),
+    
 
     
 ]
