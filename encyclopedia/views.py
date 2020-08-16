@@ -32,9 +32,12 @@ def new(request):
     if request.method == "POST":
         form = NewEntryForm(request.POST)
         if form.is_valid():
-            
-
-            return redirect("encyclopedia:index")
+            if True: #validate is not repeated and save the entry
+                entry_html = "<h1> This entry already exists!</h1><p>Please search and add the information you know... Thanks!</p>"
+                return render(request, "encyclopedia/entry.html", 
+                        {"entry_html": entry_html, "entry_title": "Repeated!"})
+            else:
+                return redirect("encyclopedia:index")
     else:
         return render(request, "encyclopedia/new.html", 
             {"form": NewEntryForm() })
