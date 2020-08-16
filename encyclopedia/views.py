@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.urls import reverse
 import markdown2, random
 from . import util
+from django import forms
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -23,3 +23,12 @@ def rand(request):
     entries = util.list_entries()
     entry = random.choice(entries)
     return redirect("encyclopedia:search", entry)
+
+class NewEntryForm(forms.Form):
+    title = forms.CharField(label="Entry's title")
+    entry_md = forms.CharField(widget=forms.Textarea)
+
+def new(request):
+    return render(request, "encyclopedia/new.html", 
+        {"form": NewEntryForm() })
+
