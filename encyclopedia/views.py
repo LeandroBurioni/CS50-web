@@ -32,12 +32,20 @@ def new(request):
     if request.method == "POST":
         form = NewEntryForm(request.POST)
         if form.is_valid():
-            if True: #validate is not repeated and save the entry
+            repeated = False
+            title = form.cleaned_data["title"]
+            entry_md = form.cleaned_data["entry_md"]
+            entries = util.list_entries()
+            for entry in entries:
+                if title == entry:
+                    repeated = True
+            if repeated: #validate is not repeated and save the entry
                 entry_html = "<h1> This entry already exists!</h1><p>Please search and add the information you know... Thanks!</p>"
                 return render(request, "encyclopedia/entry.html", 
                         {"entry_html": entry_html, "entry_title": "Repeated!"})
             else:
-                return redirect("encyclopedia:index")
+                util.save_entry(title, entry_md)
+                return redirect("encyclopedia:index")                        
     else:
         return render(request, "encyclopedia/new.html", 
             {"form": NewEntryForm() })
