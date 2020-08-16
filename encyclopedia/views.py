@@ -29,6 +29,13 @@ class NewEntryForm(forms.Form):
     entry_md = forms.CharField(widget=forms.Textarea)
 
 def new(request):
-    return render(request, "encyclopedia/new.html", 
-        {"form": NewEntryForm() })
+    if request.method == "POST":
+        form = NewEntryForm(request.POST)
+        if form.is_valid():
+            
+
+            return redirect("encyclopedia:index")
+    else:
+        return render(request, "encyclopedia/new.html", 
+            {"form": NewEntryForm() })
 

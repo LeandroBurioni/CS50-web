@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block body %}  
-Share information with other people:
-    {{ form }}
+<p> Thanks for sharing information with other people.</p>
+    <form action="{% url 'encyclopedia:new' %}" method="POST">
+        {% csrf_token %}
+        <table> {{ form }} </table>
+        <input type="submit">
+    </form>>
   
 {% endblock %}
