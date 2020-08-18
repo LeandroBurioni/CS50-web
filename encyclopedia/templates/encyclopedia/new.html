@@ -8,8 +8,8 @@
 <p> Thanks for sharing information with other people.</p>
     <form action="{% url 'encyclopedia:new' %}" method="POST">
         {% csrf_token %}
-        <table> {{ form }} </table>
+        < {{ form.as_p }} 
         <input type="submit">
-    </form>>
+    </form>
   
 {% endblock %}

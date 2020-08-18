@@ -41,7 +41,16 @@ def new(request):
             else:
                 util.save_entry(title, entry_md)
                 return redirect("encyclopedia:index")                        
-    else:
+    else: 
         return render(request, "encyclopedia/new.html", 
             {"form": NewEntryForm() })
 
+def results(request): #it was very dificult, i tried to use Django's form but i cant
+    if request.method == "POST": #i understand that for search form is better to use GET method but i dont know how
+            title = request.POST['searched'] #this line is not very good for me, but works.
+            if util.is_repeated(title):
+                return redirect("encyclopedia:search", title)
+    else:
+        entry_html = "<h1> What are you doing here?</h1><p>Please, try again... Thanks!</p>"
+        return render(request, "encyclopedia/entry.html", 
+                        {"entry_html": entry_html, "entry_title": "Nothing here!"})
