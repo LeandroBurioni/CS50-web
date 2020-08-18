@@ -35,3 +35,11 @@ def get_entry(title):
         return f.read().decode("utf-8")
     except FileNotFoundError:
         return None
+
+def is_repeated(title): #to check if the TITLE's entry already exists
+    repeated = False
+    entries = list_entries()
+    for entry in entries:
+        if title.lower() == entry.lower():
+            repeated = True
+    return repeated
