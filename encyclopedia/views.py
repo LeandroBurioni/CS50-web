@@ -50,6 +50,12 @@ def results(request): #it was very dificult, i tried to use Django's form but i 
             title = request.POST['searched'] #this line is not very good for me, but works.
             if util.is_repeated(title):
                 return redirect("encyclopedia:search", title)
+            else: #make the query of substring 
+                subs = []
+                for entry in util.list_entries():
+                    if title.lower() in entry.lower(): #to compare strings, dont forget the LOWER()
+                        subs.append(entry)
+                return render(request, "encyclopedia/results.html", {"searched": title, "sub_list":subs})
     else:
         entry_html = "<h1> What are you doing here?</h1><p>Please, try again... Thanks!</p>"
         return render(request, "encyclopedia/entry.html", 

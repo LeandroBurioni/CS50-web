@@ -1,11 +1,17 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    Results for: 
+    Results for: {{searched}}
 {% endblock %}
 
 {% block body %}
-    
+    <h1>We dont have an entry for {{searched}} yet.</h1>
+    <p>May be you are searching for one of this:</p>
+    <ul>
+        {% for entry in sub_list %}
+            <li><a href="{% url 'encyclopedia:search' entry %}">{{ entry }}</a></li>
+        {% endfor %}
+    </ul>
  
 
 {% endblock %}
