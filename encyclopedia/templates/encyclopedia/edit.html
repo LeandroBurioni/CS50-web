@@ -1,0 +1,15 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+   WiKi || Editing {{ title }}
+{% endblock %}
+
+{% block body %}  
+
+    <p>Thanks for add information about {{ title }}</p>
+    <form action="{% url 'encyclopedia:edit' title %}" method="POST">
+        <textarea name="textarea" style="width: 80%; height: 500px;">{{ entry_md |safe}}</textarea>
+        <button type="submit">Save!</button>
+        {% csrf_token %}
+    </form>
+    {% endblock %}
