@@ -17,7 +17,7 @@ def search(request, title):
     else:
         entry_html = "<h1> Not founded element!</h1><p>May be you can create an entry... Thanks!</p>"
         return render(request, "encyclopedia/entry.html", 
-            {"entry_html": entry_html, "entry_title": "Not Found!"})
+            {"entry_html": entry_html, "entry_title": title})
 
 def rand(request):
     entries = util.list_entries()
@@ -35,9 +35,9 @@ def new(request):
             title = form.cleaned_data["title"]
             entry_md = form.cleaned_data["entry_md"]
             if util.is_repeated(title):
-                entry_html = "<h1> This entry already exists!</h1><p>Please search and add the information you know... Thanks!</p>"
+                entry_html = "<h1> This entry already exists!</h1><p>Please add more information... Thanks!</p>"
                 return render(request, "encyclopedia/entry.html", 
-                        {"entry_html": entry_html, "entry_title": "Repeated!"})
+                        {"entry_html": entry_html, "entry_title": title})
             else:
                 util.save_entry(title, entry_md)
                 return redirect("encyclopedia:index")                        
@@ -56,13 +56,13 @@ def results(request): #it was very dificult, i tried to use Django's form but i 
                     if title.lower() in entry.lower(): #to compare strings, dont forget the LOWER()
                         subs.append(entry)
                 return render(request, "encyclopedia/results.html", {"searched": title, "sub_list":subs})
-    else:
+    else: 
         entry_html = "<h1> What are you doing here?</h1><p>Please, try again... Thanks!</p>"
         return render(request, "encyclopedia/entry.html", 
-                        {"entry_html": entry_html, "entry_title": "Nothing here!"})
+                        {"entry_html": entry_html, "entry_title": "ERROR!!"})
 
 def edit(request, title):
-    if request.method == "POST":  #if the buttom was pressed
+    if request.method == "POST":  #if the SAVE buttom was pressed
         entry_md = request.POST.get('textarea')
         util.save_entry(title, entry_md)
         return redirect("encyclopedia:search", title)
