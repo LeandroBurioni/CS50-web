@@ -6,10 +6,12 @@
 
 {% block body %}  
 <p> Thanks for sharing information with other people.</p>
+    <div class="form-group">
     <form action="{% url 'encyclopedia:new' %}" method="POST">
         {% csrf_token %}
-        < {{ form.as_p }} 
-        <input type="submit">
+        {{ form.as_p }} 
+        <input class="btn btn-secondary" type="submit" value="Save!">
     </form>
+    </div>
   
 {% endblock %}

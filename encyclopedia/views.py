@@ -26,7 +26,7 @@ def rand(request):
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label="Entry's title")
-    entry_md = forms.CharField(widget=forms.Textarea)
+    entry_md = forms.CharField(label="" ,widget=forms.Textarea(attrs={"rows":5, "cols":20}))
 
 def new(request):
     if request.method == "POST":
@@ -63,8 +63,7 @@ def results(request): #it was very dificult, i tried to use Django's form but i 
 
 def edit(request, title):
     if request.method == "POST":  #if the buttom was pressed
-        entry_md = request.POST['textarea']
-
+        entry_md = request.POST.get('textarea')
         util.save_entry(title, entry_md)
         return redirect("encyclopedia:search", title)
     else:
