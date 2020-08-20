@@ -35,12 +35,12 @@ def new(request):
             title = form.cleaned_data["title"]
             entry_md = form.cleaned_data["entry_md"]
             if util.is_repeated(title):
-                entry_html = "<h1> This entry already exists!</h1><p>Please add more information... Thanks!</p>"
+                entry_html = "<h1> This entry already exists!</h1><p>Please add more information clicking on Edit... Thanks!</p>"
                 return render(request, "encyclopedia/entry.html", 
                         {"entry_html": entry_html, "entry_title": title})
             else:
                 util.save_entry(title, entry_md)
-                return redirect("encyclopedia:index")                        
+                return redirect("encyclopedia:search", title)                        
     else: 
         return render(request, "encyclopedia/new.html", 
             {"form": NewEntryForm() })
