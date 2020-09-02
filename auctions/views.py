@@ -9,8 +9,7 @@ from .models import User, Listing, Bid, Comment
 
 
 def index(request):
-    return render(request, "auctions/index.html")
-
+    return render(request, "auctions/index.html", { "listings": Listing.objects.all() })
 
 def login_view(request):
     if request.method == "POST":
@@ -87,3 +86,20 @@ def create(request):
         return render(request, "auctions/create.html", {
             "create_form": CreateForm()})
 
+class CommentForm(forms.Form):
+    text = forms.CharField()
+
+def listing(request,listing_id):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data["text"]
+            new = Comment(owner=request.user, auction=listing_id, text=text)
+            new.save()
+            return HttpResponseRedirect(reverse("listing", listing_id))
+    else:
+        return render(request, "auctions/auction.html", {
+            "comment_form": CommentForm(),
+            "listing": Listing.objects.get(id=listing_id),
+            #"comments":  Comment.objects.filter(auction=listing_id)
+            })

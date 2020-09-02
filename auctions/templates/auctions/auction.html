@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} Listing: {{listing.title}} {% endblock %}
+
+{% block body %}
+    <h1>Listing: {{listing.title}}</h1>
+    <img src="{{ listing.url_image }}" width="500px" style="align-self: center;">
+    {{listing.desc}}
+    <h3>${{listing.price}}</h3>
+
+    {% if user.is_authenticated %}
+            {% if user == listing.owner %}
+                <button>Close auction!</button>
+            {% else%}
+                <a>Check if is the winner for the auction</a>
+                <button>Add to Watchlist!</button>           
+            {% endif %}    
+    {% endif %}
+    <hr>
+    <h1>Comments:</h1>
+    {% if user.is_authenticated %}
+    <a>Add comment:</a>
+    <form action="{% url 'listing' listing.id %}" method="POST"> 
+        {%csrf_token%}
+        {{comment_form}}
+        <input type="submit">
+    </form> 
+    {% endif %}
+    {% for comment in comments %}
+    <div>
+        <p>Date:{{comment.date}}</p>
+        <p>{{comment.author}} said:</p>
+        <p>{{comment.text}}</p>
+    </div>
+    {% endfor %}
+
+{% endblock %}

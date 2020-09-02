@@ -23,8 +23,8 @@ class Listing(models.Model):
         return f"#{self.id}: {self.title} ${self.price}"
     
 class Comment(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE , related_name="comments")
-    auction = models.ForeignKey(Listing, on_delete=models.CASCADE, default=Listing) 
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE )
+    auction = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments") 
     text = models.TextField
     date = models.DateTimeField(auto_now=True)
 
