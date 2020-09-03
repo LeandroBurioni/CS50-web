@@ -3,6 +3,8 @@
 {% block title %} Listing: {{listing.title}} {% endblock %}
 
 {% block body %}
+
+    {%if listing.open %}
     <h1>Listing: {{listing.title}}</h1>
     <img src="{{ listing.url_image }}" width="500px" style="align-self: center;">
     {{listing.desc}}
@@ -35,5 +37,7 @@
     {% empty %}
     <p>No commentary yet. Be the first!!</p>
     {% endfor %}
-
-{% endblock %}
+    {% else %}
+    <h1>Closed auction! Sorry. </h1>
+    {% endif %}
+    {% endblock %}
