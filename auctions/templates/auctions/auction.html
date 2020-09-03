@@ -32,6 +32,8 @@
         <p>{{comment.author}} said:</p>
         <p>{{comment.text}}</p>
     </div>
+    {% empty %}
+    <p>No commentary yet. Be the first!!</p>
     {% endfor %}
 
 {% endblock %}

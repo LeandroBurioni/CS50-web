@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django import forms
 
@@ -9,7 +9,7 @@ from .models import User, Listing, Bid, Comment
 
 
 def index(request):
-    return render(request, "auctions/index.html", { "listings": Listing.objects.all() })
+    return render(request, "auctions/index.html", { "listings": Listing.objects.all()})
 
 def login_view(request):
     if request.method == "POST":
@@ -93,13 +93,13 @@ def listing(request,listing_id):
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():
+            auction=Listing.objects.get(pk=listing_id)
             text = form.cleaned_data["text"]
-            new = Comment(owner=request.user, auction=listing_id, text=text)
+            new = Comment(author=request.user, auction=auction, text=text)
             new.save()
-            return HttpResponseRedirect(reverse("listing", listing_id))
+            return redirect("listing", listing_id)
     else:
+        lists = get_object_or_404(Listing, pk=listing_id)
         return render(request, "auctions/auction.html", {
             "comment_form": CommentForm(),
-            "listing": Listing.objects.get(id=listing_id),
-            #"comments":  Comment.objects.filter(auction=listing_id)
-            })
+            "listing": lists})

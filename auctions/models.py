@@ -38,7 +38,7 @@ class Comment(models.Model):
         return f"{self.author} said {self.text}"
 
 class Bid(models.Model):
-    price = models.IntegerField
+    price = models.IntegerField()
     date = models.DateTimeField(auto_now=True)
     auction = models.ForeignKey(Listing, on_delete=models.CASCADE, default=Listing) 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE , related_name="bids") #Each auction have a owner, a owner can have many auctions 
