@@ -5,8 +5,17 @@ from django.conf import settings
 
 class User(AbstractUser):
     pass
- 
+    def __str__(self):
+        return {self.username}
 #I can do Inheritance for DRY with owner and date fields but dont know a way to use related_name with it.
+class Category(models.Model):
+    CAT = (
+        ('NA', 'Not Category Selected'),
+        ('w', 'Weareable'),
+        ('n', 'new'),
+        ('u', 'used'),
+    )
+    category = models.CharField(max_length=2, choices=CAT, blank=True, default='NA')
 
 class Listing(models.Model):
     title = models.CharField(max_length=50)
@@ -17,13 +26,7 @@ class Listing(models.Model):
     open = models.BooleanField(default=True) #True if the auction is opened
     date = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) #Deleting a user, all the auctions will be deleted.
-    CAT = (
-        ('NA', 'Not Category Selected'),
-        ('w', 'Weareable'),
-        ('n', 'new'),
-        ('u', 'used'),
-    )
-    category = models.CharField(max_length=2, choices=CAT, blank=True, default='NA', )
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="listings")
 
     def __str__(self):
         return f"#{self.id}: {self.title} ${self.price}"
@@ -44,5 +47,11 @@ class Bid(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE , related_name="bids") #Each auction have a owner, a owner can have many auctions 
 
     def __str__(self):
-        return self.price
+        return {self.price}
 
+class Watchlist(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE , related_name="watchlist")
+    auctions = models.ForeignKey(Listing, on_delete=models.CASCADE)
+
+    #def __str__(self):
+     #   return f"{self.user} wants {self.auctions.id}"
