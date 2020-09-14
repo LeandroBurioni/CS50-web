@@ -12,7 +12,10 @@
 
     {% if user.is_authenticated %}
             {% if user == listing.owner %}
-                <button>Close auction!</button>
+            <form action="{% url 'listing' listing.id %}" method="POST">
+                {%csrf_token%}
+                <input type="submit" value="Close Auction!" name="close">
+            </form>
             {% else%}
                 <a>Check if is the winner for the auction</a>
                 <button>Add to Watchlist!</button>           
@@ -25,7 +28,7 @@
     <form action="{% url 'listing' listing.id %}" method="POST"> 
         {%csrf_token%}
         {{comment_form}}
-        <input type="submit">
+        <input type="submit" value="Send comment" name="comment">
     </form> 
     {% endif %}
     {% for comment in listing.comments.all %}
