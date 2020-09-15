@@ -18,8 +18,8 @@ class Listing(models.Model):
     open = models.BooleanField(default=True) #True if the auction is opened
     date = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) #Deleting a user, all the auctions will be deleted.
-    watchlist = models.ManyToManyField(User, blank=True, related_name="watchlist")
-
+    watchlist = models.ManyToManyField(User, blank=True, related_name="watchlist_content")
+    
     def __str__(self):
         return f"#{self.id}: {self.title} ${self.price}"
     

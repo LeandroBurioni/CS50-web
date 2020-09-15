@@ -4,13 +4,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from auctions import forms
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing, Bid, Comment
 
 def index(request):
     return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True)})
 
-def login_view(request):
+def login_view(request):  #Add next=? return redirect.
     if request.method == "POST":
         # Attempt to sign user in
         username = request.POST["username"]
@@ -19,6 +20,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
+            #If there are next=, handle the get method to redirect to there.
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "auctions/login.html", {
@@ -57,6 +59,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+@login_required(login_url='login')
 def create(request):
     if request.method == "POST":
         form = forms.CreateForm(request.POST)
@@ -74,8 +77,10 @@ def create(request):
             "create_form": forms.CreateForm()})
 
 def listing(request,listing_id):
+    auction = get_object_or_404(Listing, pk=listing_id)
+    user = request.user
+    in_watchlist = user.watchlist_content.filter(pk=listing_id).exists()
     if request.method == "POST":
-        auction=Listing.objects.get(pk=listing_id)
         if 'comment' in request.POST:
             form = forms.CommentForm(request.POST)
             if form.is_valid():
@@ -88,13 +93,18 @@ def listing(request,listing_id):
             auction.save()
             return redirect("listing", listing_id)
         elif 'watchlist' in request.POST:
-            #CheckBox to add or drop this auction from the user's watchlist
-            pass           
+            if in_watchlist:
+                user.watchlist_content.remove(auction.id)
+            else:
+                user.watchlist_content.add(auction)
+            auction.save()
+            return redirect("listing", listing_id)
     else:
-        lists = get_object_or_404(Listing, pk=listing_id)
         return render(request, "auctions/auction.html", {
             "comment_form": forms.CommentForm(),
-            "listing": lists})
+            "listing": auction,
+            "in_watchlist": in_watchlist
+            })
 
 def category(request, cat):
     return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True, category=cat) })

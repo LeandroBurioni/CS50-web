@@ -16,9 +16,16 @@
                 {%csrf_token%}
                 <input type="submit" value="Close Auction!" name="close">
             </form>
-            {% else%}
+            {% else %}
                 <a>Check if is the winner for the auction</a>
-                <button>Add to Watchlist!</button>           
+                <form action="{% url 'listing' listing.id %}" method="POST">
+                    {%csrf_token%}
+                    {% if in_watchlist %}
+                        <input type="submit" name="watchlist"  value="Remove fromm Watchlist">    
+                    {%else%}
+                        <input type="submit" name="watchlist"  value="Add to Watchlist">    
+                    {% endif %}
+                </form>        
             {% endif %}    
     {% endif %}
     <hr>
