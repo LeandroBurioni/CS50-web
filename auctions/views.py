@@ -6,7 +6,7 @@ from django.urls import reverse
 from auctions import forms
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, Category
 
 def index(request):
     return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True)})
@@ -106,8 +106,10 @@ def listing(request,listing_id):
             "in_watchlist": in_watchlist
             })
 
-def category(request, cat):
-    return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True, category=cat)})
+def category(request, category_id):
+        listing = Listing.objects.filter(open=True, category=category_id)
+        return render(request, "auctions/index.html", { "listings": listing })
+ 
 
 @login_required(login_url='login')
 def watchlist(request):

@@ -9,12 +9,18 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username}"
 
+class Category(models.Model):
+    category = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return f"{self.category}"
+
 class Listing(models.Model):
     title = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(blank=True)
     url_image = models.URLField(blank=True)
-    category = models.CharField(max_length=64, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, blank=True, related_name="listing_category")
     open = models.BooleanField(default=True) #True if the auction is opened
     date = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) #Deleting a user, all the auctions will be deleted.
