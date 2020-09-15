@@ -107,4 +107,8 @@ def listing(request,listing_id):
             })
 
 def category(request, cat):
-    return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True, category=cat) })
+    return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True, category=cat)})
+
+@login_required(login_url='login')
+def watchlist(request):
+    return render(request, "auctions/index.html", { "listings": request.user.watchlist_content.all()})
