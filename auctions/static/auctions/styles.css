@@ -13,6 +13,34 @@ body {
     margin: auto;
   }
 
+.auction{
+  font-size: large;
+
+}
+
+#image{
+  text-align: center;
+  max-width: 500px;
+}
+
+.price{
+  font-weight: bold;
+}
+
+#date{
+  font-size: small;
+  color: lightgray;
+}
+
+#name{
+  font-size: medium;
+  font-weight: bold;
+}
+
+#comment{
+  font-size: small;
+}
+
 /* Color Pallets
   #D3741C; Naranja
   FDFFE3 Cremita

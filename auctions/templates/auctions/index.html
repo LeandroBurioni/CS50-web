@@ -1,20 +1,23 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %} Active Listings {% endblock %}
+
 {% block body %}
-<h2>Active Listings</h2>
+<h1>Active Listings</h1>
 <div class="container">
 {% for auction in listings %}
 <div class="row border">
-    <div class="col-4">{% if auction.url_image %} 
+    <div class="col-4">
+            {% if auction.url_image %} 
             <img src="{{ auction.url_image }}" width="300px" style="align-self: center;">
-    {% endif %}</div>
+            {% endif %}
+    </div>
     <div class="col-8">
-        <a href="{% url 'listing' auction.id %}"><h3 style="font-weight: bold;">{{auction.title}}</h3></a>
-        <h6><span style="font-weight: bold;">Price: $</span>{{auction.price}}</h6>
-        <p><span style="color: grey;">Created {{auction.date}}</span></p>
+        <a href="{% url 'listing' auction.id %}"><h3>{{auction.title}}</h3></a>
+        <h6 class="price">Price: ${{auction.price}}</h6>
+        <p id="date">Created {{auction.date}}</p>
     </div>
 </div>
     <br>
-
 {% endfor %}
 </div>{% endblock %}

@@ -8,6 +8,8 @@ class CreateForm(forms.Form):
     url_image = forms.URLField(label="URL's Image" , required=False)
     category = forms.ModelChoiceField(queryset= Category.objects.all(), required=False)
 
+class BidForm(forms.Form):
+    new_bid = forms.FloatField(label="")
 
 class CommentForm(forms.Form):
     text = forms.CharField()

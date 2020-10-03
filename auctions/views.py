@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -76,10 +77,13 @@ def create(request):
         return render(request, "auctions/create.html", {
             "create_form": forms.CreateForm()})
 
+
 def listing(request,listing_id):
     auction = get_object_or_404(Listing, pk=listing_id)
     user = request.user
     in_watchlist = user.watchlist_content.filter(pk=listing_id).exists()
+    max_bid = auction.bids.all().aggregate(Max('price'))['price__max']
+    winning = auction.bids.filter(price=max_bid)
     if request.method == "POST":
         if 'comment' in request.POST:
             form = forms.CommentForm(request.POST)
@@ -90,6 +94,7 @@ def listing(request,listing_id):
                 return redirect("listing", listing_id)
         elif 'close' in request.POST:
             auction.open=False
+            auction.winner = request.user 
             auction.save()
             return redirect("listing", listing_id)
         elif 'watchlist' in request.POST:
@@ -99,14 +104,28 @@ def listing(request,listing_id):
                 user.watchlist_content.add(auction)
             auction.save()
             return redirect("listing", listing_id)
+        elif 'bid' in request.POST:
+            form = forms.BidForm(request.POST)
+            if form.is_valid():
+                new_bid = form.cleaned_data["new_bid"]
+                new = Bid(price=new_bid, author=request.user, auction=auction)
+                new.save()
+                return redirect("listing", listing_id)
     else:
         return render(request, "auctions/auction.html", {
             "comment_form": forms.CommentForm(),
             "listing": auction,
-            "in_watchlist": in_watchlist
+            "in_watchlist": in_watchlist,
+            "bid_form": forms.BidForm(),
+            "last_bid": max_bid
             })
 
-def category(request, category_id):
+def categories(request):
+    return render(request, "auctions/categories.html", { "categories": Category.objects.all()})
+
+def category(request, category):
+        category = category.capitalize()
+        category_id = Category.objects.get(category=category)
         listing = Listing.objects.filter(open=True, category=category_id)
         return render(request, "auctions/index.html", { "listings": listing })
  

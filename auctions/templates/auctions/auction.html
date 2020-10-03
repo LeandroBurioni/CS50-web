@@ -5,48 +5,60 @@
 {% block body %}
 
     {%if listing.open %}
-    <h1>Listing: {{listing.title}}</h1>
-    <img src="{{ listing.url_image }}" width="500px" style="align-self: center;">
-    {{listing.desc}}
-    <h3>${{listing.price}}</h3>
-
+    <div class="auction">    
+        <h1>Listing: {{listing.title}}</h1>
+        <img id="image" src="{{ listing.url_image }}">
+        <p id="description">{{listing.desc}}</p>
+        <p id="price">${{listing.price}}</p>
+    </div>
     {% if user.is_authenticated %}
             {% if user == listing.owner %}
+            <p> You published this product at {{listing.date}}</p>
             <form action="{% url 'listing' listing.id %}" method="POST">
                 {%csrf_token%}
                 <input type="submit" value="Close Auction!" name="close">
             </form>
             {% else %}
-                <a>Check if is the winner for the auction</a>
+                <!-- Ver si va ganando o sino decir cual es el precio actual -->
                 <form action="{% url 'listing' listing.id %}" method="POST">
                     {%csrf_token%}
                     {% if in_watchlist %}
-                        <input type="submit" name="watchlist"  value="Remove fromm Watchlist">    
+                        <img type="submit" src="\static\auctions\bookmark-heart-fill.svg" alt="" width="32" height="32" title="Remove from Watchlist">
+                        <input type="submit" name="watchlist"  value="Remove from Watchlist">    
                     {%else%}
-                        <input type="submit" name="watchlist"  value="Add to Watchlist">    
+                        <img type="submit" src="\static\auctions\bookmark-heart.svg" alt="" width="32" height="32" title="Add to Watchlist">
+                        <input type="submit"  name="watchlist"  value="Add to Watchlist">  
                     {% endif %}
-                </form>        
+                </form>
+                
+                <form action="{% url 'listing' listing.id %}" method="POST"> 
+                    {%csrf_token%}
+                    {{bid_form}}
+                    <input type="submit" value="BID!" name="bid">
+                </form>         
             {% endif %}    
     {% endif %}
     <hr>
-    <h1>Comments:</h1>
-    {% if user.is_authenticated %}
-    <a>Add comment:</a>
-    <form action="{% url 'listing' listing.id %}" method="POST"> 
-        {%csrf_token%}
-        {{comment_form}}
-        <input type="submit" value="Send comment" name="comment">
-    </form> 
-    {% endif %}
-    {% for comment in listing.comments.all %}
     <div>
-        <p>Date:{{comment.date}}</p>
-        <p>{{comment.author}} said:</p>
-        <p>{{comment.text}}</p>
+        <h3>Comments:</h3>
+        {% if user.is_authenticated %}
+        <a>Add comment:</a>
+        <form action="{% url 'listing' listing.id %}" method="POST"> 
+            {%csrf_token%}
+            {{comment_form}}
+            <input type="submit" value="Send comment" name="comment">
+        </form> 
+        {% endif %}
+
+        {% for comment in listing.comments.all %}
+        <div class="comment">
+            <a id="name">{{comment.author}} said:</a><span id="date">{{comment.date}}</span>
+            <p id="comment">{{comment.text}}</p>
+        </div>
+        {% empty %}
+        <h3>No commentary yet. Be the first!!</h3>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No commentary yet. Be the first!!</p>
-    {% endfor %}
     {% else %}
     <h1>Closed auction! Sorry. </h1>
     {% endif %}

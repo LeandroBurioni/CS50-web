@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} Categories {% endblock %}
+
+{% block body %}
+<h1>Categories</h1>
+{% for cat in categories %}
+<p href="{% url 'category' cat.category %}">{{cat.category}}</p>
+{% endfor %}
+<h4>Only admins can add new categories!</h4>
+{% endblock %}
