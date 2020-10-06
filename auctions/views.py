@@ -82,8 +82,6 @@ def listing(request,listing_id):
     auction = get_object_or_404(Listing, pk=listing_id)
     user = request.user
     in_watchlist = user.watchlist_content.filter(pk=listing_id).exists()
-    max_bid = auction.bids.all().aggregate(Max('price'))['price__max']
-    winning = auction.bids.filter(price=max_bid)
     if request.method == "POST":
         if 'comment' in request.POST:
             form = forms.CommentForm(request.POST)
@@ -94,7 +92,6 @@ def listing(request,listing_id):
                 return redirect("listing", listing_id)
         elif 'close' in request.POST:
             auction.open=False
-            auction.winner = request.user 
             auction.save()
             return redirect("listing", listing_id)
         elif 'watchlist' in request.POST:
@@ -105,19 +102,22 @@ def listing(request,listing_id):
             auction.save()
             return redirect("listing", listing_id)
         elif 'bid' in request.POST:
-            form = forms.BidForm(request.POST)
-            if form.is_valid():
-                new_bid = form.cleaned_data["new_bid"]
+            #form = forms.BidForm(request.POST)
+            #if form.is_valid():
+                new_bid = request.POST['bid']
                 new = Bid(price=new_bid, author=request.user, auction=auction)
                 new.save()
-                return redirect("listing", listing_id)
+                auction.price = new_bid
+                auction.winner = request.user 
+                auction.save()
+                return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/auction.html", {
             "comment_form": forms.CommentForm(),
             "listing": auction,
             "in_watchlist": in_watchlist,
-            "bid_form": forms.BidForm(),
-            "last_bid": max_bid
+            #"bid_form": forms.BidForm(),
+            "price": auction.price+0.01
             })
 
 def categories(request):
