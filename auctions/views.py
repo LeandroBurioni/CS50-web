@@ -77,7 +77,7 @@ def create(request):
         return render(request, "auctions/create.html", {
             "create_form": forms.CreateForm()})
 
-
+@login_required(login_url='login')
 def listing(request,listing_id):
     auction = get_object_or_404(Listing, pk=listing_id)
     user = request.user
@@ -124,7 +124,7 @@ def categories(request):
     return render(request, "auctions/categories.html", { "categories": Category.objects.all()})
 
 def category(request, category):
-        category = category.capitalize()
+        #category = category.capitalize()
         category_id = Category.objects.get(category=category)
         listing = Listing.objects.filter(open=True, category=category_id)
         return render(request, "auctions/index.html", { "listings": listing })

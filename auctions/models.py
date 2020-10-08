@@ -11,12 +11,9 @@ class User(AbstractUser):
 
 class Category(models.Model):
     category = models.CharField(max_length=64, unique=True)
-
-    def get_queryset(self):
-        return Category.objects.all()
         
     def __str__(self):
-        return f"{self.category}"
+        return f"{self.id}->{self.category}"
 
 class Listing(models.Model):
     title = models.CharField(max_length=50)
@@ -43,10 +40,10 @@ class Comment(models.Model):
         return f"{self.author} said {self.text}"
 
 class Bid(models.Model):
-    price = models.IntegerField()
+    price = models.FloatField()
     #date = models.DateTimeField(auto_now=True)
     auction = models.ForeignKey(Listing, on_delete=models.CASCADE, default=Listing, related_name="bids") 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bids_made" ) #Each auction have a owner, a owner can have many auctions 
 
     def __str__(self):  
-        return f"{self.price}"
+        return f"{self.auction}/ {self.author} => {self.price}"
