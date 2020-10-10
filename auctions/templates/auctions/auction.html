@@ -16,7 +16,7 @@
                 </button>    
             {%else%}
                 <button id="button" name="watchlist" type="submit">
-                    <img src="\static\auctions\bookmark-heart.svg" alt="Add to Watchlist" width="32" height="32" title="Remove from Watchlist">    
+                    <img src="\static\auctions\bookmark-heart.svg" alt="Add to Watchlist" width="32" height="32" title="Add to Watchlist">    
                     <span class="sr-only">Add to Watchlist</span>                           
                 </button>                            
             {% endif %}
@@ -74,7 +74,16 @@
         {% if user == listing.winner %}
             <h3>Congratulation! You win this auction.</h3>
         {% else %}
-            <h1>Sorry, this auction was closed! </h1>
+            <h1>This auction was closed! </h1>
+            <form action="{% url 'listing' listing.id %}" method="POST">
+                {%csrf_token%}
+                {% if in_watchlist %} 
+                    <button id="button" name="watchlist" type="submit">
+                        <img src="\static\auctions\bookmark-heart-fill.svg" alt="Remove from Watchlist" width="32" height="32" title="Remove from Watchlist">    
+                        <span class="sr-only">Remove from Watchlist</span>                           
+                    </button>                         
+                {% endif %}
+            </form>
         {% endif %}
     {% endif %}
     {% endblock %}
