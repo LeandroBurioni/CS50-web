@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from .models import User, Listing, Bid, Comment, Category
 
 def index(request):
-    return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True)})
+    return render(request, "auctions/index.html", { "listings": Listing.objects.filter(open=True), "title": "Active Listings"})
 
 def login_view(request):  #Add next=? return redirect.
     if request.method == "POST":
@@ -127,9 +127,13 @@ def category(request, category):
         #category = category.capitalize()
         category_id = Category.objects.get(category=category)
         listing = Listing.objects.filter(open=True, category=category_id)
-        return render(request, "auctions/index.html", { "listings": listing })
+        return render(request, "auctions/index.html", { "listings": listing, "title": category.capitalize() })
  
 
 @login_required(login_url='login')
 def watchlist(request):
-    return render(request, "auctions/index.html", { "listings": request.user.watchlist_content.all()})
+    return render(request, "auctions/index.html", { "listings": request.user.watchlist_content.all(), "title": "My Watchlist"})
+
+@login_required(login_url='login')
+def published(request):
+    return render(request, "auctions/index.html", { "listings": request.user.own_auctions.all(), "title": "My publications:"})
