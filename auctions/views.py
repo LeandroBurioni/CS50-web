@@ -75,7 +75,7 @@ def create(request):
             return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/create.html", {
-            "create_form": forms.CreateForm()})
+            "create_form": forms.CreateForm(initial = {'category': Category.objects.get(category="NoCategory")})})
 
 @login_required(login_url='login')
 def listing(request,listing_id):

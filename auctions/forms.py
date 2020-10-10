@@ -7,7 +7,7 @@ class CreateForm(forms.Form):
     description = forms.CharField(label="Description")
     price = forms.FloatField(label="Initial Bid", min_value=0)
     url_image = forms.URLField(label="URL's Image" , required=False)
-    category = forms.ModelChoiceField(queryset= Category.objects.all(), required=False)
+    category = forms.ModelChoiceField(queryset= Category.objects.all(), empty_label="Select a Category:")
 
 
 class CommentForm(forms.Form):

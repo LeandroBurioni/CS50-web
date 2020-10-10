@@ -1,44 +1,51 @@
 {% extends "auctions/layout.html" %}
 
-{% block title %} Listing: {{listing.title}} {% endblock %}
+{% block title %} {{listing.title}} | Rematand2 {% endblock %}
 
 {% block body %}
 
     {%if listing.open %}
     <div class="auction">    
-        <h1>Listing: {{listing.title}}</h1>
-        <img id="image" src="{{ listing.url_image }}">
-        <p id="description">{{listing.desc}}</p>
-        <p id="price">${{listing.price}}</p>
+        <h1>{{listing.title}}</h1>
+        <form action="{% url 'listing' listing.id %}" method="POST">
+            {%csrf_token%}
+            {% if in_watchlist %} 
+                <button id="button" name="watchlist" type="submit">
+                    <img src="\static\auctions\bookmark-heart-fill.svg" alt="Remove from Watchlist" width="32" height="32" title="Remove from Watchlist">    
+                    <span class="sr-only">Remove from Watchlist</span>                           
+                </button>    
+            {%else%}
+                <button id="button" name="watchlist" type="submit">
+                    <img src="\static\auctions\bookmark-heart.svg" alt="Add to Watchlist" width="32" height="32" title="Remove from Watchlist">    
+                    <span class="sr-only">Add to Watchlist</span>                           
+                </button>                            
+            {% endif %}
+        </form>
+        {% if listing.url_image %}<img id="image" src="{{ listing.url_image }}">
+        {% else %}<img id="image" src="https://lamascotita.pe/wp-content/uploads/2019/12/No-Image-Available.png">{% endif %}
+        <p id="description">{{listing.description}}</p>
+        <h4 class="price">Actual Price: ${{listing.price}}</h4>
+        <h6 class="owner">Posted by {{listing.owner}}</h6>
+        <small class="text-muted">Created {{listing.date}}</small>
     </div>
     {% if user.is_authenticated %}
             {% if user == listing.owner %}
-            <p> You published this product at {{listing.date}}, the actual price is {{listing.price}}</p>
-
+            <p>The price is {{listing.price}} and the actual winner is {{listing.winner}}</p>
             <form action="{% url 'listing' listing.id %}" method="POST">
                 {%csrf_token%}
                 <input type="submit" value="Close Auction!" name="close">
             </form>
             {% else %}
                 {% if user == listing.winner %}
-                    <h3>You are winning this auction...</h3>
-                {% endif %}
-                <form action="{% url 'listing' listing.id %}" method="POST">
-                    {%csrf_token%}
-                    {% if in_watchlist %}
-                        <img type="submit" src="\static\auctions\bookmark-heart-fill.svg" alt="" width="32" height="32" title="Remove from Watchlist">
-                        <input type="submit" name="watchlist"  value="Remove from Watchlist">    
-                    {%else%}
-                        <img type="submit" src="\static\auctions\bookmark-heart.svg" alt="" width="32" height="32" title="Add to Watchlist">
-                        <input type="submit"  name="watchlist"  value="Add to Watchlist">  
-                    {% endif %}
-                </form>
-                
+                    <h3>You are winning this auction!</h3>
+                {% else %}
+                <p>You can get it! Make your bid:</p>
                 <form action="{% url 'listing' listing.id %}" method="POST"> 
                     {%csrf_token%}
                     <input type="number" step="0.01" name="bid" min="{{price}}">
-                    <input type="submit" value="BID!">
+                    <input type="submit" value="BID NOW!">                          
                 </form>         
+                {% endif %}
 
             {% endif %}    
     {% endif %}
@@ -60,13 +67,14 @@
             <p id="comment">{{comment.text}}</p>
         </div>
         {% empty %}
-        <h3>No commentary yet. Be the first!!</h3>
+        <h3>No commentary yet. Start talking with the seller!</h3>
         {% endfor %}
     </div>
     {% else %}
-    <h1>Sorry, this auction is closed! </h1>
         {% if user == listing.winner %}
             <h3>Congratulation! You win this auction.</h3>
+        {% else %}
+            <h1>Sorry, this auction was closed! </h1>
         {% endif %}
     {% endif %}
     {% endblock %}

@@ -3,20 +3,31 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{% block title %}Auctions{% endblock %}</title>
+        <title>{% block title %}Rematan2{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <link rel="icon" type="image/svg" href="\static\auctions\bid.svg" sizes="any">
     </head>
     <body>
         <div class="header">
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        <img style="width: 130px;" src="\static\auctions\logo.svg">
+                    </div>
+                    <div class="col-8">
+                        <h1>Rematan2</h1>
+                        <div>
+                            {% if user.is_authenticated %}
+                                Signed in as <strong>{{ user.username }}</strong>.
+                            {% else %}
+                                Not signed in.
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <ul class="nav sticky-top">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
@@ -47,5 +58,8 @@
         </div>
         {% block body %}
         {% endblock %}
+        <hr>
+        <small>All the project was done only with educational purposes. // CS50 Web Programming</small>
+        <small class="text-muted">I used icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></small>
     </body>
 </html>
