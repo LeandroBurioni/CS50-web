@@ -2,6 +2,6 @@ This is a design of an eBay-like e-commerce auction site that allow users to pos
 
 Here you can see the instructions: https://cs50.harvard.edu/web/2020/projects/2/commerce
 
-Demostration video: 
+Demostration video: https://youtu.be/bD7A_3305JE
 
 All the project was done only with educational purposes.
