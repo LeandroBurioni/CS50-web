@@ -24,7 +24,7 @@ function compose_email() {
   // To POST an email to the API
   document.querySelector("#compose-form").onsubmit = function() {
     alert(`Submiting?`);
-    
+    event.preventDefault;
     fetch('/emails', {
       method: 'POST',
       body: JSON.stringify({
