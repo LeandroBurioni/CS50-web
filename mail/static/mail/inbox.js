@@ -22,9 +22,9 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 
   // To POST an email to the API
-  document.querySelector("#compose-form").onsubmit = function() {
-    alert(`Submiting?`);
-    event.preventDefault;
+  document.querySelector("#compose-form").onsubmit = function(e) {
+    //console.log(`Submiting?`); to check if is working when you click submit 
+    e.preventDefault;
     fetch('/emails', {
       method: 'POST',
       body: JSON.stringify({
@@ -50,6 +50,32 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  var body = document.querySelector('#emails-view'); 
+  body.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  //GET the emails
+ 
+
+  fetch(`/emails/${mailbox}`)
+.then(response => response.json())
+.then(emails => {
+    // Print emails in console
+    console.log(emails);
+    /*
+    THIS IS NOT WORKING FOR NOW
+    emails.forEach(element => {
+      const mail = document.createElement('div');
+      mail.setAttribute("class", "div-email");
+      mail.innerHTML(`<a id="sender">${element.sender}</a><a id="subject">${element.subject}</a>
+                      <p id="body">${element.body}</p>
+                      <p id="date">${element.timestamp}</p>`);
+
+    document.querySelector('#emails-view').append(mail);
+    });
+
+      */
+});
+  
+
 }
 
