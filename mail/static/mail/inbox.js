@@ -6,13 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
 
-  document.querySelector("#compose-form").onsubmit = send_mail;
-
   // By default, load the inbox
   load_mailbox('inbox');
+
 });
 
-function compose_email() {
+function compose_email() { //Load view and listening submit 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
@@ -21,11 +20,14 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+
+  // Listening if the compose-form is submited
+  document.querySelector("#compose-form").onsubmit = send_mail;
 }
   
-// To POST an email to the API
-function send_mail(){
-    fetch('/emails', {
+function send_mail(event){// To POST an email to the API and check if sent
+  event.preventDefault();
+  fetch('/emails', {
       method: 'POST',
       body: JSON.stringify({
           recipients: document.querySelector('#compose-recipients').value,
@@ -34,13 +36,16 @@ function send_mail(){
       })
     })
     .then(response => response.json())
-    .then(result => {
-        // Print result
-        console.log(result);
+    .then(result => { 
+        if (result.error){
+          alert(result.error); 
+        }
+        else{
+          console.log("Message sent sucessfully");
+        }
     });
-    
+    load_mailbox('sent'); //TODO: After this, the mailbox is loaded too.
 }
-
 
 function load_mailbox(mailbox) {
   
@@ -53,24 +58,32 @@ function load_mailbox(mailbox) {
   body.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   //GET the emails
+  console.log("Loading "+mailbox);
   fetch(`/emails/${mailbox}`)
 .then(response => response.json())
 .then(emails => {
-    // Print emails in console
-    console.log(emails);
-    for (var each in emails){
-      let mail = emails[each];
-      addMail(mail);
-    }
-  
+    emails.forEach(data => addMail(data, mailbox))
 });
 }
 
-function addMail(element){
+function addMail(element, box){
   const div = document.createElement('div');
   div.className = 'div-mail';
-  div.innerHTML = '<a id="sender">' + element.sender + ' </a>';
+  if (element.read === 'false'){
+    div.style.backgroundColor = "green";
+    div.className += 'unreaded'; //NotWorking
+  }
+
+  if (box === 'inbox')
+    div.innerHTML = '<a>From: </a><b id="sender">' + element.sender + ' </b>';
+  else if (box === 'sent')
+    div.innerHTML = '<a>To: </a><b id="recipients">' + element.recipients + ' </b>';
+  
   div.innerHTML += '<a id="subject">' + element.subject +' </a>';
   div.innerHTML += '<a id="date">' + element.timestamp +' </a>';
   document.querySelector('#emails-view').append(div);
+}
+
+function readMail(id){
+  alert("Email #"+id);
 }

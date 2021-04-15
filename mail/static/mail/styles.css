@@ -3,7 +3,7 @@ textarea {
 }
 
 .div-mail{
-    background-color: lightsteelblue;
+    
     border: 0.5px solid #000000;
     border-radius: 3px;
 
@@ -13,4 +13,8 @@ textarea {
     color: darkgrey;
     align-items: right;
     position: absolute;
+}
+
+.unreaded{
+    background-color: red;
 }
