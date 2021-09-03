@@ -1,6 +1,10 @@
 {% extends "mail/layout.html" %}
 {% load static %}
 
+{% block script %}
+    <script src="{% static 'mail/inbox.js' %}"></script>
+{% endblock %}
+
 {% block body %}
     <h2>{{ request.user.email }}</h2>
 
@@ -12,6 +16,10 @@
     <hr>
 
     <div id="emails-view">
+    </div>
+    
+    <div id="single-email-view">
+        <a>Se ve.</a>
     </div>
 
     <div id="compose-view">
@@ -27,11 +35,8 @@
                 <input class="form-control" id="compose-subject" placeholder="Subject">
             </div>
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-            <input type="submit" class="btn btn-primary" value="Send!">
+            <input type="submit" style="width: 70%;" class="btn btn-primary" value="Send!">
         </form>
     </div>
 {% endblock %}
 
-{% block script %}
-    <script src="{% static 'mail/inbox.js' %}"></script>
-{% endblock %}
