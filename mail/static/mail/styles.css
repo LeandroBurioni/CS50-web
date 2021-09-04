@@ -1,9 +1,9 @@
 textarea {
-    min-height: 400px;
+    min-height: 70%;
 }
 
 .div-mail{
-    
+    display : grid;
     border: 0.5px solid #000000;
     border-radius: 3px;
 }
@@ -20,7 +20,11 @@ textarea {
     background-color: lightgray;
 }
 
-.div-single-mail{
-    background-color: green;
+#btn-submit{
+    text-align: center;
+}
+
+input[type=text] {
+    width: 50%;
 }
 

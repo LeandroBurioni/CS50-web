@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body %}
+    <div class="header">
     <h2>{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
@@ -13,18 +14,20 @@
     <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
     <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
-    <hr>
+    </div><hr>
 
     <div id="emails-view">
     </div>
     
-    <div id="single-email-view">
-        <a>Se ve.</a>
+    <div id="reading-view">
+        <div class="mail">
+        </div>
     </div>
 
     <div id="compose-view">
         <h3>New Email</h3>
         <form id="compose-form">
+            <div class="alert alert-danger" id="not_sent" role="alert"></div>
             <div class="form-group">
                 From: <input disabled class="form-control" value="{{ request.user.email }}">
             </div>
@@ -35,7 +38,8 @@
                 <input class="form-control" id="compose-subject" placeholder="Subject">
             </div>
             <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
-            <input type="submit" style="width: 70%;" class="btn btn-primary" value="Send!">
+            <br>
+            <div id="btn-submit"><input type="submit" class="btn btn-primary" value="Send!"></div>
         </form>
     </div>
 {% endblock %}
