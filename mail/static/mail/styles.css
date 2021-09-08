@@ -3,7 +3,7 @@ textarea {
 }
 
 .div-mail{
-    display : grid;
+    display : block;
     border: 0.5px solid #000000;
     border-radius: 3px;
 }
@@ -20,11 +20,25 @@ textarea {
     background-color: lightgray;
 }
 
+
 #btn-submit{
     text-align: center;
-}
-
-input[type=text] {
     width: 50%;
 }
 
+#email-subject{
+    display: inline-block;
+    margin-left: 50px;
+    font-weight: bold;
+}
+
+#email-timestamp{
+    display: inline-block;
+    float: right;
+    color: grey;
+}
+
+.btn-archive{
+    float: right;
+    margin-right: 15px;
+}

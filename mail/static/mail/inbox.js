@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
   // Use buttons to toggle between views
@@ -43,13 +41,13 @@ function send_mail(event){// To POST an email to the API and check if sent
     .then(result => {
         if (result.error){
           alert(result.error);
-          // Bootstrap Alert
+          /* Bootstrap Alert
           document.querySelector('#not_sent').innerHTML = `<a>${result.error}</a>`;
           document.querySelector('#not_sent').style.display = 'block';
-          setTimeout(
-            function() {
-                document.querySelector('#not_sent').style.display = 'none';}, 2000); //Improve it to not close alone
-                document.querySelector('#compose-recipients').value = '';
+          setTimeout( ()=> { // This isn't accesible! 
+              document.querySelector('#not_sent').style.display = 'none';
+              document.querySelector('#compose-recipients').value = '';
+          }, 2000);*/    
         }
         else{
           console.log(result.message);
@@ -76,42 +74,67 @@ function load_mailbox(mailbox) {
     //Each element of the array will be passed to the function
     emails.forEach(data => addMail(data, mailbox))
   });
-
 }
 
 function addMail(element, box){
-  // Create each element dinamically
+  // Create each element view dinamically
   const div = document.createElement('div');
   div.className = 'div-mail';
   let unread_class = element.read? "email-view-read" : "email-view-unread";
-  div.className = `row border border-dark rounded email-view ${unread_class}`;
   
+  const btnArchive = document.createElement('button'); 
+  btnArchive.className = 'btn btn-sm btn-outline-primary btn-archive';
+
   switch(box){
     case 'inbox': 
-      div.innerHTML += '<a id="sender">' + element.sender +' </a>';
+      div.innerHTML += '<span id="email-sender">From: ' + element.sender +' </span>';
+      btnArchive.innerHTML = 'Archive';
+      btnArchive.addEventListener('click', ()=>{
+        // set as Archived
+        fetch(`/emails/${element.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+        archived: true  })
+        });
+        event.stopPropagation(); //if not, the mail will be opened
+        load_mailbox('inbox');
+      });
       break;
     case 'sent': 
-      div.innerHTML += '<a id="recipients">' + element.recipients +' </a>';
+      div.innerHTML += '<span id="email-recipients">To: ' + element.recipients +' </span>';
+      unread_class = "email-view-unread";
+      btnArchive.style.display = 'none';
       break;
     case 'archive': 
-      div.innerHTML += '<a id="sender">' + element.sender +' </a>';
+      div.innerHTML += '<span id="email-sender">From: ' + element.sender +' </span>';
+      btnArchive.innerHTML = 'Unarchive';
+      btnArchive.addEventListener('click', ()=>{
+        // set as Unarchived
+        fetch(`/emails/${element.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+        archived: false  })
+        });
+        event.stopPropagation(); //if not, the mail will be opened
+        load_mailbox('inbox');
+      });
       break;
   }
   
-  div.innerHTML += '<a id="subject">' + element.subject +' </a>';
-  div.innerHTML += '<a id="timestamp">' + element.timestamp +' </a>';
+  div.className += `row border border-dark rounded email-view ${unread_class}`;
   
-  document.querySelector('#emails-view').appendChild(div);
+  div.innerHTML += '<span id="email-subject">' + element.subject +' </span>';
+  div.innerHTML += '<span id="email-timestamp">' + element.timestamp +' </span>';
+  div.append(btnArchive);
   div.addEventListener('click', ()=> openMail(element.id));
+  document.querySelector('#emails-view').appendChild(div);
 }
 
 function openMail(id){
-  console.log("Clicked on :"+id);
   // Load the view with the mail
   mail_view(id);
   
   // Set as Read
-  console.log('Read: '+id);
   fetch(`/emails/${id}`, {
   method: 'PUT',
   body: JSON.stringify({
@@ -120,53 +143,38 @@ function openMail(id){
 }
 
 function mail_view(id){
-  // Clear previous data (if exist)
-  document.querySelector('#reading-view').innerHTML = '';
-  
   // Show the email and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#reading-view').style.display = 'block';
 
-  const div = document.createElement('div');
-  div.className = 'mail';
-
-  // This button shouldn't be static in HTML? to only change the display as block or none
-  
-  const btnArchive = document.createElement('button');
-    btnArchive.className = "btn btn-sm btn-outline-primary";
-    btnArchive.innerHTML = "Archive";
-    btnArchive.className = "btn btn-sm btn-outline-primary";
-    btnArchive.addEventListener('click', ()=> {
-      fetch(`/emails/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        archived: true  })
-      });
-    }
-    );
-    
-    document.querySelector('#reading-view').appendChild(btnArchive);
   // GET to fetch the data
   fetch(`/emails/${id}`)
   .then(response => response.json())
   .then(email => {
-     if (email.archived){
-       btnArchive.className = "btn btn-sm btn-primary";
-        }
-     //create the view and load the data
-     div.innerHTML = '<p>From: <b id="sender">' + email.sender + ' </b></p>';
+     //create the view and load the data to the DOM
+     document.querySelector('#rd-person').innerHTML = email.sender;
+     document.querySelector('#rd-recipient').innerHTML = email.recipients;
+     document.querySelector('#rd-subject').innerHTML = email.subject;
+     document.querySelector('#rd-timestamp').innerHTML = email.timestamp;
+     document.querySelector('#rd-body').innerHTML = email.body;
      
-     div.innerHTML += '<p>Recipients: <b id="recipients">' + email.sender + ' </b></p>';
-     div.innerHTML += '<p>Subject: ' + email.subject + '  <b id="timestamp">'+email.timestamp+'</b></p>';
-     
-     
-     div.innerHTML += '<p>Body: ' + email.body + ' </p>';
-    
-     div.innerHTML += '<br><hr>';
-     document.querySelector('#reading-view').appendChild(div);
-     
+     const btnReply = document.querySelector('#btn-reply');
+     btnReply.addEventListener('click', ()=>{
+       reply(email.id);
+     });
+  });
+}
+
+function reply(id){
+  fetch(`/emails/${id}`)
+  .then(response => response.json())
+  .then(email => {
+  document.querySelector('#compose-recipients').value = email.sender;
+  document.querySelector('#compose-recipients').disabled = true;
+  document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  
   });
   
-
+  compose_email();
 }
