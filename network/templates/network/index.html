@@ -1,5 +1,18 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+{% if user.is_authenticated %}
+    <br>
+    <div class="div-newpost container">
+        <form id="newpost-form">
+            <div id="post-txt"><textarea class="form-control" placeholder="What are you thinking in..?"></textarea></div>
+            <div class=""><input type="submit" class="btn btn-primary btn-post" value="Post!"></div>
+        </form>
+    </div>
+    <br>
+
+{% else %}
+<h2> Create an account and enjoy!</h2>
+{% endif %}
+
 {% endblock %}

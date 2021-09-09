@@ -1,0 +1,22 @@
+textarea {
+    min-height: 400px;
+}
+
+.btn-post{
+    width: 50%;
+    text-align: center;
+}
+
+#post-txt{
+    width: 80%;
+    border: 20px;
+    border-radius: 1%;
+    text-align: right; 
+
+}
+
+.container{
+    display: grid;
+}
+
+.body{ text-align: center;}
