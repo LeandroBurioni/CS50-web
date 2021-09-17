@@ -42,3 +42,9 @@ textarea {
     float: right;
     margin-right: 15px;
 }
+
+.container {
+    max-width: none !important;
+    min-width: 800px;
+    width: auto;
+}

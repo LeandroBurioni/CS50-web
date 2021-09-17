@@ -44,17 +44,17 @@ function send_mail(event){// To POST an email to the API and check if sent
           /* Bootstrap Alert
           document.querySelector('#not_sent').innerHTML = `<a>${result.error}</a>`;
           document.querySelector('#not_sent').style.display = 'block';
-          setTimeout( ()=> { // This isn't accesible! 
+          setTimeout( ()=> { // This isn't accesible!
               document.querySelector('#not_sent').style.display = 'none';
               document.querySelector('#compose-recipients').value = '';
-          }, 2000);*/    
+          }, 2000);*/
         }
         else{
           console.log(result.message);
           load_mailbox('sent');
         }
     });
-    
+
 }
 
 function load_mailbox(mailbox) {
@@ -66,7 +66,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   var body = document.querySelector('#emails-view');
   body.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-  
+
   //GET the emails
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
@@ -81,12 +81,12 @@ function addMail(element, box){
   const div = document.createElement('div');
   div.className = 'div-mail';
   let unread_class = element.read? "email-view-read" : "email-view-unread";
-  
-  const btnArchive = document.createElement('button'); 
+
+  const btnArchive = document.createElement('button');
   btnArchive.className = 'btn btn-sm btn-outline-primary btn-archive';
 
   switch(box){
-    case 'inbox': 
+    case 'inbox':
       div.innerHTML += '<span id="email-sender">From: ' + element.sender +' </span>';
       btnArchive.innerHTML = 'Archive';
       btnArchive.addEventListener('click', ()=>{
@@ -100,12 +100,12 @@ function addMail(element, box){
         load_mailbox('inbox');
       });
       break;
-    case 'sent': 
+    case 'sent':
       div.innerHTML += '<span id="email-recipients">To: ' + element.recipients +' </span>';
       unread_class = "email-view-unread";
       btnArchive.style.display = 'none';
       break;
-    case 'archive': 
+    case 'archive':
       div.innerHTML += '<span id="email-sender">From: ' + element.sender +' </span>';
       btnArchive.innerHTML = 'Unarchive';
       btnArchive.addEventListener('click', ()=>{
@@ -120,9 +120,9 @@ function addMail(element, box){
       });
       break;
   }
-  
+
   div.className += `row border border-dark rounded email-view ${unread_class}`;
-  
+
   div.innerHTML += '<span id="email-subject">' + element.subject +' </span>';
   div.innerHTML += '<span id="email-timestamp">' + element.timestamp +' </span>';
   div.append(btnArchive);
@@ -133,7 +133,7 @@ function addMail(element, box){
 function openMail(id){
   // Load the view with the mail
   mail_view(id);
-  
+
   // Set as Read
   fetch(`/emails/${id}`, {
   method: 'PUT',
@@ -158,7 +158,7 @@ function mail_view(id){
      document.querySelector('#rd-subject').innerHTML = email.subject;
      document.querySelector('#rd-timestamp').innerHTML = email.timestamp;
      document.querySelector('#rd-body').innerHTML = email.body;
-     
+
      const btnReply = document.querySelector('#btn-reply');
      btnReply.addEventListener('click', ()=>{
        reply(email.id);
@@ -174,8 +174,8 @@ function reply(id){
   document.querySelector('#compose-recipients').disabled = true;
   document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
   document.querySelector('#compose-body').value = `On ${email.timestamp}, ${email.sender} wrote: ${email.body}`;
-  document.querySelector('#compose-body').innerHTML = '<br>';
+  document.querySelector('#compose-body').innerHTML = `{{ On ${email.timestamp}, ${email.sender} wrote: ${email.body} |linebreaks }}`;
   });
-  
+
   compose_email();
 }
