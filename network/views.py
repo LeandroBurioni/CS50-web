@@ -1,14 +1,23 @@
+from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User
-
+from network import forms
+from .models import User, Post
+from django.contrib.auth.decorators import login_required
 
 def index(request):
-    return render(request, "network/index.html")
+    if request.method == "POST":
+        form = forms.PostForm(request.POST)
+        if form.is_valid():
+            post_message = form.cleaned_data["post_message"]
+            new = Post(post_message= post_message, writed_by = request.user)
+            new.save()
+            return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "network/index.html",  {"post_form": forms.PostForm()})
 
 
 def login_view(request):
@@ -61,3 +70,6 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+#@login_required
+#def feed(request):
