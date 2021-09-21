@@ -20,4 +20,13 @@
 <h2> Create an account and enjoy!</h2>
 {% endif %}
 
+{% for post in posts %}
+
+<div class="each-post">
+    <p>{{post.timestamp}}</p>
+    <p>{{post.post_message}}</p>
+    <p>{{post.writed_by}}</p>writed_by
+
+{% endfor %}
+
 {% endblock %}

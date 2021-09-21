@@ -17,7 +17,7 @@ def index(request):
             new.save()
             return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "network/index.html",  {"post_form": forms.PostForm()})
+        return render(request, "network/index.html",  {"post_form": forms.PostForm(), "posts":Post.objects.all() })
 
 
 def login_view(request):
