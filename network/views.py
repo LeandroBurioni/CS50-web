@@ -71,5 +71,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-#@login_required
-#def feed(request):
+@login_required(login_url='login')
+def profile(request, usernm):
+        return render(request, "network/profile.html", { "view_profile": User.objects.get(username=usernm) })
+ 

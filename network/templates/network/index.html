@@ -17,15 +17,15 @@
     <br>
 
 {% else %}
-<h2> Create an account and enjoy!</h2>
+<h2> Create an account and start posting!</h2>
 {% endif %}
 
 {% for post in posts %}
 
 <div class="each-post">
-    <p>{{post.timestamp}}</p>
+    <time>{{post.timestamp}}</time>
+    <a href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a>
     <p>{{post.post_message}}</p>
-    <p>{{post.writed_by}}</p>writed_by
 
 {% endfor %}
 
