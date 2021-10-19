@@ -17,12 +17,16 @@ class Post(models.Model):
     def __str__(self):
         return f"#{self.id} {self.writed_by} ${self.post_message} // {self.timestamp} "
 
-#class Like(models.Model):
-#    like_user 
-#    like_post
+class Like(models.Model):
+    like_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
+    like_post = models.ForeignKey(Post, on_delete=models.CASCADE, null=False)
 
-#class Following(models.Model):
-#   follower = 
-#   
+    def __str__(self):
+        return f"{self.like_user} puso like a {self.like_post}"
 
-
+class Following(models.Model):
+    influencer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="followed" ,null=False)
+    follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following", null=False)
+    
+    def __str__(self):
+        return f"{self.follower} sigue a {self.influencer}"

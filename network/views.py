@@ -2,10 +2,11 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from network import forms
-from .models import User, Post
+from .models import Following, User, Post
 from django.contrib.auth.decorators import login_required
 
 def index(request):
@@ -17,7 +18,7 @@ def index(request):
             new.save()
             return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "network/index.html",  {"post_form": forms.PostForm(), "posts":Post.objects.all() })
+        return render(request, "network/index.html",  {"post_form": forms.PostForm(), "posts":Post.objects.all().order_by('-timestamp') })
 
 
 def login_view(request):
@@ -73,5 +74,14 @@ def register(request):
 
 @login_required(login_url='login')
 def profile(request, usernm):
-        return render(request, "network/profile.html", { "view_profile": User.objects.get(username=usernm) })
- 
+        user_profile = User.objects.get(username=usernm)
+        if request.user != user_profile:
+            flag = False
+            
+            if Following.objects.check(influencer=user_profile, follower=request.user):
+                flag = True
+            return render(request, "network/profile.html", { "follow_flag":flag, "view_profile": User.objects.get(username=user_profile), 
+                "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')})
+        else:
+            return render(request, "network/profile.html", { "follow_flag":"NO!", "view_profile": User.objects.get(username=user_profile), 
+                "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')})

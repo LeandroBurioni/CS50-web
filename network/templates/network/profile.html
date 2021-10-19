@@ -3,4 +3,24 @@
 {% block body %}
 {{view_profile.username}}
 {{view_profile.email}}
+
+{{follow_flag}}
+
+{% if follow_flag == "NO!" %}
+    <!--No cargar ningun boton, un usuario no puede seguirse a si mismo.-->
+{% elif follow_flag %}
+<button class="btn btn-secondary" id="unfollow">Unfollow</button>
+{% else %}
+<button class="btn btn-primary" id="follow">Follow</button>
+{% endif %}
+
+{% for post in posts %}
+
+<div class="each-post">
+    <time>{{post.timestamp}}</time>
+    <!--<a href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a>-->
+    <p>{{post.post_message}}</p>
+</div>
+{% endfor %}
+
 {% endblock %}
