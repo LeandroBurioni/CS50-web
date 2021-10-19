@@ -4,9 +4,10 @@
 {{view_profile.username}}
 {{view_profile.email}}
 
-{{follow_flag}}
+<p>Following: {{n_following}}</p>
+<p>Followers: {{n_follows}}</p>
 
-{% if follow_flag == "NO!" %}
+{% if follow_flag == "self-profile" %}
     <!--No cargar ningun boton, un usuario no puede seguirse a si mismo.-->
 {% elif follow_flag %}
 <button class="btn btn-secondary" id="unfollow">Unfollow</button>
