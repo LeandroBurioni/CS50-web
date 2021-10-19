@@ -8,6 +8,7 @@ from django.urls import reverse
 from network import forms
 from .models import Following, User, Post, Like
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 def index(request):
     if request.method == "POST":
@@ -18,7 +19,11 @@ def index(request):
             new.save()
             return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "network/index.html",  {"post_form": forms.PostForm(), "posts":Post.objects.all().order_by('-timestamp') })
+        all_posts = Post.objects.all().order_by('-timestamp')
+        paginator = Paginator(all_posts, 5)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        return render(request, "network/index.html",  {"post_form": forms.PostForm(), "posts": page_obj})
 
 
 def login_view(request):
