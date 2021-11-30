@@ -20,7 +20,10 @@ class Post(models.Model):
 class Like(models.Model):
     like_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
     like_post = models.ForeignKey(Post, on_delete=models.CASCADE, null=False)
-
+    
+    class Meta:
+        unique_together = ('like_user', 'like_post')
+    
     def __str__(self):
         return f"{self.like_user} puso like a {self.like_post}"
 
@@ -28,5 +31,8 @@ class Following(models.Model):
     influencer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="followed" ,null=False)
     follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following", null=False)
     
+    class Meta:
+        unique_together = ('follower', 'influencer')
+
     def __str__(self):
         return f"{self.follower} sigue a {self.influencer}"

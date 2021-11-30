@@ -99,7 +99,20 @@ def profile(request, usernm): #requested by username
 
 @login_required(login_url='login')
 def following(request):
-    pass
+
+    user = User.objects.get(id=request.user.id)
+    following = user.following.all()
+    following_users = [follow.influencer for follow in following]
+    
+    all_posts = Post.objects.filter(writed_by__in=following_users).order_by("-timestamp")
+
+    paginator = Paginator(all_posts, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "network/index.html", { "post_form": '',
+        "posts": page_obj } )
+
 #    follow = Following.objects.filter(follower=request.user)
 #    return render(request, "network/index.html", {
 #        "posts": Post.objects.filter( writed_by = follow)})
