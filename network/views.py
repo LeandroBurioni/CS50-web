@@ -111,6 +111,22 @@ def following(request):
         "posts": page_obj } )
 
 #Endpoint to know if given user is followed by the actual user.
+def isFollowing(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"error": "Invalid user_id."}, status=404)
+
+    if request.method != "GET":
+        return JsonResponse({"error": "It's not GET method! :|"}, status=400)
+    else:
+            #If user exists, check if is follower
+        try:
+            following = Following.objects.get(influencer=user, follower=request.user)
+            return JsonResponse({"response": True}, status=200)
+        except Following.DoesNotExist:
+            return JsonResponse({"response": False}, status=200)
+            
 
 
 #Endpoint to Follow/Unfollow action

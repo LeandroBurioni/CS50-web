@@ -11,4 +11,7 @@ urlpatterns = [
     path("profile/<str:usernm>", views.profile, name="profile"),
     path("following", views.following, name="following"),
 
+    #API's route
+    path("doFollow/<int:user_id>", views.isFollowing, name="isFollowing")
+
 ]
