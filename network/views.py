@@ -83,17 +83,14 @@ def profile(request, usernm): #requested by username
         n_following = Following.objects.filter(follower=user_profile).count() 
         n_follows = Following.objects.filter(influencer=user_profile).count()
         if request.user != user_profile: 
-            flag = False #By default, the user dont follow anyone.
-            if Following.objects.check(influencer=user_profile, follower=request.user): #If the user follow the loaded profile
-                flag = True     #Flag used to choose what button to show (follow/unfollow)
             return render(request, "network/profile.html", { 
                 "n_following":n_following, "n_follows":n_follows,
-                "follow_flag":flag, "view_profile": User.objects.get(username=user_profile), 
+                "view_profile": User.objects.get(username=user_profile), 
                 "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')})
         else: # It's themself profile! No button should be showed
             return render(request, "network/profile.html", { 
                 "n_following":n_following, "n_follows":n_follows,
-                "follow_flag":"self-profile", "view_profile": User.objects.get(username=user_profile), 
+                "view_profile": User.objects.get(username=user_profile), 
                 "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')},
                 )
 
@@ -113,6 +110,36 @@ def following(request):
     return render(request, "network/index.html", { "post_form": '',
         "posts": page_obj } )
 
-#    follow = Following.objects.filter(follower=request.user)
-#    return render(request, "network/index.html", {
-#        "posts": Post.objects.filter( writed_by = follow)})
+#Endpoint to know if given user is followed by the actual user.
+
+
+#Endpoint to Follow/Unfollow action
+@login_required(login_url='login')
+def follow_user(request, user_id):
+    if request.method == "POST":
+
+        user = User.objects.get(id=user_id)
+
+        if request.user == user:
+            return JsonResponse({"message": "Can not follow yourself"}, status=400)
+
+        user_following = Following.objects.get_or_create(influencer=user)
+
+        if request.user not in user_following.followers.all():
+            user_following.followers.add(request.user)
+            user_following.save()
+
+            return JsonResponse(
+                {"followed": True, "user_id": user.id, "follower": request.user.id},
+                status=200,
+            )
+
+        user_following.followers.remove(request.user)
+        user_following.save()
+
+        return JsonResponse(
+            {"followed": False, "user": user, "follower": request.user},
+            status=200,
+        )
+
+    return JsonResponse({"message": "Can only post to method"}, status=400)

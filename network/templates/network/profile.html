@@ -7,8 +7,9 @@
 <p>Following: {{n_following}}</p>
 <p>Followers: {{n_follows}}</p>
 
-{% if follow_flag == "self-profile" %}
+{% if view_profile == request.user %}
     <!--No cargar ningun boton, un usuario no puede seguirse a si mismo.-->
+    <button class="btn btn-secondary"><i class="bi bi-pencil-fill"></i> Edit Profile</button>
 {% elif follow_flag %}
 <button class="btn btn-secondary" id="unfollow">Unfollow</button>
 {% else %}
