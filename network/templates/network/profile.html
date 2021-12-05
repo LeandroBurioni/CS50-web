@@ -1,6 +1,7 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+
 {{view_profile.username}}
 {{view_profile.email}}
 
@@ -8,12 +9,20 @@
 <p>Followers: {{n_follows}}</p>
 
 {% if view_profile == request.user %}
-    <!--No cargar ningun boton, un usuario no puede seguirse a si mismo.-->
-    <button class="btn btn-secondary"><i class="bi bi-pencil-fill"></i> Edit Profile</button>
-{% elif follow_flag %}
-<button class="btn btn-secondary" id="unfollow">Unfollow</button>
+    <!--No cargar ningun boton, un usuario no puede seguirse a si mismo.
+    <button class="btn btn-secondary"><i class="bi bi-pencil-fill"></i> Edit Profile</button>-->
 {% else %}
-<button class="btn btn-primary" id="follow">Follow</button>
+    <div class="btn btn-primary" id="btn-follow" onclick="console.log('{{ view_profile.id }}');isFollow('{{ view_profile.id }}')">
+    </div>
+    <script>
+        console.log(document.querySelector("#btn-follow").innerHTMl);
+        if (isFollow('{{ view_profile.id }}')){
+            document.querySelector('#btn-follow').innerHTMl = "Unfollow";
+        }
+        else{
+            document.querySelector('#btn-follow').innerHTML = "Unfollow";
+        }
+    </script>
 {% endif %}
 
 {% for post in posts %}

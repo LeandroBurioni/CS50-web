@@ -79,20 +79,24 @@ def register(request):
 
 @login_required(login_url='login')
 def profile(request, usernm): #requested by username
+    try:
         user_profile = User.objects.get(username=usernm) #get the User from db 
-        n_following = Following.objects.filter(follower=user_profile).count() 
-        n_follows = Following.objects.filter(influencer=user_profile).count()
-        if request.user != user_profile: 
-            return render(request, "network/profile.html", { 
-                "n_following":n_following, "n_follows":n_follows,
-                "view_profile": User.objects.get(username=user_profile), 
-                "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')})
-        else: # It's themself profile! No button should be showed
-            return render(request, "network/profile.html", { 
-                "n_following":n_following, "n_follows":n_follows,
-                "view_profile": User.objects.get(username=user_profile), 
-                "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')},
-                )
+    except User.DoesNotExist:
+        return HttpResponseRedirect(reverse("index"))
+        
+    n_following = Following.objects.filter(follower=user_profile).count() 
+    n_follows = Following.objects.filter(influencer=user_profile).count()
+    if request.user != user_profile: 
+        return render(request, "network/profile.html", { 
+            "n_following":n_following, "n_follows":n_follows,
+            "view_profile": User.objects.get(username=user_profile), 
+            "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')})
+    else: # It's themself profile! No button should be showed
+        return render(request, "network/profile.html", { 
+            "n_following":n_following, "n_follows":n_follows,
+            "view_profile": User.objects.get(username=user_profile), 
+            "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')},
+            )
 
 @login_required(login_url='login')
 def following(request):
@@ -107,7 +111,7 @@ def following(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "network/index.html", { "post_form": '',
+    return render(request, "network/index.html", { "post_form": forms.PostForm(),
         "posts": page_obj } )
 
 #Endpoint to know if given user is followed by the actual user.
