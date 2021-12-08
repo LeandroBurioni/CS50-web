@@ -8,29 +8,58 @@
 <p>Following: {{n_following}}</p>
 <p>Followers: {{n_follows}}</p>
 
-{% if view_profile == request.user %}
-    <!--No cargar ningun boton, un usuario no puede seguirse a si mismo.
-    <button class="btn btn-secondary"><i class="bi bi-pencil-fill"></i> Edit Profile</button>-->
-{% else %}
-    <div class="btn btn-primary" id="btn-follow" onclick="console.log('{{ view_profile.id }}');isFollow('{{ view_profile.id }}')">
+{% if not view_profile == request.user %}
+    <div class="btn btn-primary" id="btn-follow" onclick="actFollow('{{ view_profile.id }}');">Please wait
     </div>
     <script>
-        console.log(document.querySelector("#btn-follow").innerHTMl);
-        if (isFollow('{{ view_profile.id }}')){
-            document.querySelector('#btn-follow').innerHTMl = "Unfollow";
+        document.querySelector('#btn-follow').innerHTML = "Loading...";
+        (async function(){
+        
+        const isF = await isFollow('{{ view_profile.id }}');
+        console.log(isF);    
+
+        //isFollow('{{ view_profile.id }}')
+        //.then( (value)=> console.log('Onclick view() is '+ value))
+        if(isF){
+            document.querySelector('#btn-follow').innerHTML = "Unfollow";
+            console.log('Unfollow btn loaded'); 
         }
         else{
-            document.querySelector('#btn-follow').innerHTML = "Unfollow";
+            document.querySelector('#btn-follow').innerHTML = "Follow";
+            console.log('Follow btn loaded'); 
         }
+        
+        
+        })()
+
+        function actFollow(id){
+    console.log('Boton de accion *Follow/Un* fue apretado');
+    fetch(`/actFollow/${id}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({id : id}),
+        })      
+      .then(response => response.json())
+      .then(response => {
+        console.log('Resultado:  '+response.message);
+        location.reload();
+    })
+    .catch(error => console.error('Error:', error));
+    
+};
+        
     </script>
 {% endif %}
-
+    
 {% for post in posts %}
 
 <div class="each-post">
-    <time>{{post.timestamp}}</time>
+    {% if view_profile == request.user %}
+    <button class="btn btn-secondary" onclick="editPost('{{post.id}}')"><i class="bi bi-pencil-fill"></i> Edit</button>
+    {% endif %}
+    <time>{{post.timestamp}}</time> 
     <!--<a href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a>-->
-    <p>{{post.post_message}}</p>
+    <p id="post{{post.id}}">{{post.post_message}}</p>
 </div>
 {% endfor %}
 

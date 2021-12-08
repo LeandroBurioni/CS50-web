@@ -35,4 +35,4 @@ class Following(models.Model):
         unique_together = ('follower', 'influencer')
 
     def __str__(self):
-        return f"{self.follower} sigue a {self.influencer}"
+        return f"{self.follower.id} sigue a {self.influencer.id}"

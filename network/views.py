@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -9,6 +9,7 @@ from network import forms
 from .models import Following, User, Post, Like
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     if request.method == "POST":
@@ -86,17 +87,11 @@ def profile(request, usernm): #requested by username
         
     n_following = Following.objects.filter(follower=user_profile).count() 
     n_follows = Following.objects.filter(influencer=user_profile).count()
-    if request.user != user_profile: 
-        return render(request, "network/profile.html", { 
+    
+    return render(request, "network/profile.html", { 
             "n_following":n_following, "n_follows":n_follows,
             "view_profile": User.objects.get(username=user_profile), 
             "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')})
-    else: # It's themself profile! No button should be showed
-        return render(request, "network/profile.html", { 
-            "n_following":n_following, "n_follows":n_follows,
-            "view_profile": User.objects.get(username=user_profile), 
-            "posts": Post.objects.filter(writed_by=user_profile).order_by('-timestamp')},
-            )
 
 @login_required(login_url='login')
 def following(request):
@@ -115,6 +110,7 @@ def following(request):
         "posts": page_obj } )
 
 #Endpoint to know if given user is followed by the actual user.
+@csrf_exempt
 def isFollowing(request, user_id):
     try:
         user = User.objects.get(id=user_id)
@@ -124,42 +120,35 @@ def isFollowing(request, user_id):
     if request.method != "GET":
         return JsonResponse({"error": "It's not GET method! :|"}, status=400)
     else:
-            #If user exists, check if is follower
+        #If user exists, check if is follower
         try:
-            following = Following.objects.get(influencer=user, follower=request.user)
+            Following.objects.get(influencer=user, follower=request.user)
             return JsonResponse({"response": True}, status=200)
         except Following.DoesNotExist:
             return JsonResponse({"response": False}, status=200)
             
 
 
-#Endpoint to Follow/Unfollow action
+#Endpoints to Follow/Unfollow action
+@csrf_exempt
 @login_required(login_url='login')
-def follow_user(request, user_id):
+def action_follow(request, user_id):
     if request.method == "POST":
-
-        user = User.objects.get(id=user_id)
-
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "Invalid user_id."}, status=400)
+        #User exist
         if request.user == user:
-            return JsonResponse({"message": "Can not follow yourself"}, status=400)
-
-        user_following = Following.objects.get_or_create(influencer=user)
-
-        if request.user not in user_following.followers.all():
-            user_following.followers.add(request.user)
+            return JsonResponse({"error": "Can not follow yourself"}, status=400)
+        #And is not themself
+        try:
+            Following.objects.get(influencer=user, follower=request.user).delete()
+            return JsonResponse({"message": "Unfollow action executed."},status=200)
+        except Following.DoesNotExist:
+            user_following = Following.objects.create(influencer=user, follower=request.user)
+            #user_following.followers.add(request.user)
             user_following.save()
-
-            return JsonResponse(
-                {"followed": True, "user_id": user.id, "follower": request.user.id},
-                status=200,
-            )
-
-        user_following.followers.remove(request.user)
-        user_following.save()
-
-        return JsonResponse(
-            {"followed": False, "user": user, "follower": request.user},
-            status=200,
-        )
-
+            return JsonResponse({"message": "Follow action executed."},status=200)
+        
     return JsonResponse({"message": "Can only post to method"}, status=400)

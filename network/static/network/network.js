@@ -1,21 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
-    
+   console.log("DOM loaded"); 
+   
 });
 
-function isFollow(id){ //Return true o False
-    fetch(`/isFollow/${id}`)
-    .then(response => response.json())
-    .then(resp => {
-        //console.log(resp);
-        if(resp){ 
-            console.log("Le sigue!");
-            return true;
-        }
-        else{
-            console.log("NO le sigue!");
-            return false;
-        }
-    })
+async function isFollow(id){ //Return true o False
+    const response = await fetch(`/isFollow/${id}`)
+    const resp = await response.json()
+    //console.log(response);
+    //console.log(resp);
+    console.log('Inside the js function is: '+ resp.response);
+    return await Promise.resolve(resp.response); //Tiene que estar, sino Undef
+    
 };
+
 
