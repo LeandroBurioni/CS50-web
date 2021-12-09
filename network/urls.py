@@ -14,6 +14,6 @@ urlpatterns = [
     #API's route
     path("isFollow/<int:user_id>", views.isFollowing, name="isFollowing"),
     path("actFollow/<int:user_id>", views.action_follow, name="Follow"),
-    #path("actUnfollow/<int:user_id>", views.unfollow, name="Unfollow")
+    path("edit/<int:post_id>/<str:message>", views.edit_post, name="Edit")
 
 ]

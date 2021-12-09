@@ -13,4 +13,15 @@ async function isFollow(id){ //Return true o False
     
 };
 
-
+function edit(post, text){
+    fetch(`/edit/${post}/${text}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            post_message : text,
+        })
+      })
+    .then(response => response.json())
+    .then( data => {
+        console.log("Edit function responsed -> "+data);
+    })
+}

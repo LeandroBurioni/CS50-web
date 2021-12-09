@@ -102,7 +102,7 @@ def following(request):
     
     all_posts = Post.objects.filter(writed_by__in=following_users).order_by("-timestamp")
 
-    paginator = Paginator(all_posts, 5)
+    paginator = Paginator(all_posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -152,3 +152,19 @@ def action_follow(request, user_id):
             return JsonResponse({"message": "Follow action executed."},status=200)
         
     return JsonResponse({"message": "Can only post to method"}, status=400)
+
+@csrf_exempt
+@login_required(login_url='login')
+def edit_post(request, post_id, post_message):
+    if request.method == 'POST':
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "Couldnt edit a NO EXISTING POST."}, status=400)
+        if request.user != post.writed_by:
+            return JsonResponse({"error": "It`s NOT YOUR POST."}, status=400)
+        else:
+            post.post_message = post_message
+            post.save()
+            return JsonResponse({"message": "Post modified successfully."}, status=200)
+    return JsonResponse({"error": "Only post method allowed."}, status=400)

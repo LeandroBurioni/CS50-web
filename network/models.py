@@ -11,7 +11,7 @@ class User(AbstractUser):
 
 class Post(models.Model):
     writed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posted", null=False)
-    post_message = models.TextField(max_length=50)
+    post_message = models.TextField(max_length=150)
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):

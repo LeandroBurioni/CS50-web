@@ -52,14 +52,13 @@
 {% endif %}
     
 {% for post in posts %}
-
 <div class="each-post">
-    {% if view_profile == request.user %}
-    <button class="btn btn-secondary" onclick="editPost('{{post.id}}')"><i class="bi bi-pencil-fill"></i> Edit</button>
-    {% endif %}
-    <time>{{post.timestamp}}</time> 
-    <!--<a href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a>-->
-    <p id="post{{post.id}}">{{post.post_message}}</p>
+    <a class="writed_by">{{post.writed_by}}</a> @ <time>{{post.timestamp}}</time>
+    <button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
+<br>
+    <span class="post_message">{{post.post_message}}</span>
+    <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="editPost('{{post.id}}')"></button>
+    
 </div>
 {% endfor %}
 

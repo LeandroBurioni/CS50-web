@@ -1,22 +1,42 @@
 textarea {
-    min-height: 400px;
+    height: 80px;
 }
 
 .btn-post{
-    width: 50%;
+    width: 30%;
     text-align: center;
 }
 
-#post-txt{
-    width: 80%;
-    border: 20px;
-    border-radius: 1%;
-    text-align: right; 
-
-}
-
-.container{
-    display: grid;
+.each-post {
+    position: relative;
+    width: 80%; 
+    border: 0.5px solid #000000;
+    border-radius: 3px;
+    margin: auto;
 }
 
 .body{ text-align: center;}
+
+
+.step-links{
+    margin: 30px auto 50px auto;
+    display: block;
+}
+
+.current, .writed_by{
+    color:black;
+    font-size: medium;
+    font-weight: bolder;
+}
+
+.step-links > a, time{
+    color:grey;
+}
+.step-links a:hover, .post_message{
+    font-size: large;
+    font-style: oblique;
+}
+
+#edit{
+    margin-right: auto;
+}

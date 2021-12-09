@@ -8,21 +8,25 @@
         {{ post_form.as_p}}
         <input type="submit" class="btn btn-primary btn-post" value="Post!">
     </form>
-    <br>
+    <hr>
 
 {% else %}
 <h2> Create an account and start posting!</h2>
 {% endif %}
 
+<h1>Posts:</h1>
 {% for post in posts %}
 
 <div class="each-post">
-    <time>{{post.timestamp}}</time>
-    <a href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a>
-    <p>{{post.post_message}}</p>
+    <a class="writed_by" href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a> @ <time>{{post.timestamp}}</time>
+    <button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
+<br>
+    <span class="post_message">{{post.post_message}}</span>
+    {% if post.writed_by == request.user %}
+    <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="console.log(editPost('{{post.id}}'));"></button>
+    {% endif %}
 </div>
 {% endfor %}
-
 
 <div class="pagination">
     <span class="step-links">
@@ -32,7 +36,7 @@
         {% endif %}
 
         <span class="current">
-            Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}
         </span>
 
         {% if posts.has_next %}
