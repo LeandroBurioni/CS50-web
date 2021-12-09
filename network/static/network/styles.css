@@ -40,3 +40,8 @@ textarea {
 #edit{
     margin-right: auto;
 }
+
+.card{
+    margin:auto;
+    width: 40%;
+}

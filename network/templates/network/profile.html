@@ -2,34 +2,28 @@
 
 {% block body %}
 
-{{view_profile.username}}
-{{view_profile.email}}
-
-<p>Following: {{n_following}}</p>
-<p>Followers: {{n_follows}}</p>
-
-{% if not view_profile == request.user %}
+<div class="card">
+    <h5 class="card-header">{{view_profile.email}}</h5>
+    <div class="card-body">
+      <h5 class="card-title">{{view_profile.username}}</h5>
+      <div class="card-text">
+        <p>Following: {{n_following}}</p>
+        <p>Followers: {{n_follows}}</p>
+      </div>
+      {% if not view_profile == request.user %}
     <div class="btn btn-primary" id="btn-follow" onclick="actFollow('{{ view_profile.id }}');">Please wait
     </div>
     <script>
         document.querySelector('#btn-follow').innerHTML = "Loading...";
         (async function(){
-        
         const isF = await isFollow('{{ view_profile.id }}');
-        console.log(isF);    
-
-        //isFollow('{{ view_profile.id }}')
-        //.then( (value)=> console.log('Onclick view() is '+ value))
+        //console.log(isF);    
         if(isF){
             document.querySelector('#btn-follow').innerHTML = "Unfollow";
-            console.log('Unfollow btn loaded'); 
-        }
+            console.log('Unfollow btn loaded');}
         else{
             document.querySelector('#btn-follow').innerHTML = "Follow";
-            console.log('Follow btn loaded'); 
-        }
-        
-        
+            console.log('Follow btn loaded'); }
         })()
 
         function actFollow(id){
@@ -41,15 +35,19 @@
         })      
       .then(response => response.json())
       .then(response => {
-        console.log('Resultado:  '+response.message);
+        //console.log('Resultado:  '+response.message);
         location.reload();
     })
     .catch(error => console.error('Error:', error));
     
-};
-        
+};   
     </script>
 {% endif %}
+    </div>
+  </div>
+
+<br>
+<hr>
     
 {% for post in posts %}
 <div class="each-post">
@@ -57,7 +55,9 @@
     <button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
 <br>
     <span class="post_message">{{post.post_message}}</span>
-    <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="editPost('{{post.id}}')"></button>
+    {% if view_profile == request.user %}
+    <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="editPost('{{post.id}}');"></button>
+    {% endif %}
     
 </div>
 {% endfor %}
