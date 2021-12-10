@@ -10,37 +10,23 @@
         <p>Following: {{n_following}}</p>
         <p>Followers: {{n_follows}}</p>
       </div>
-      {% if not view_profile == request.user %}
-    <div class="btn btn-primary" id="btn-follow" onclick="actFollow('{{ view_profile.id }}');">Please wait
-    </div>
+{% if not view_profile == request.user %}
+    <div class="btn btn-primary" id="btn-follow" onclick="actFollow('{{ view_profile.id }}');">Please wait!</div>
     <script>
         document.querySelector('#btn-follow').innerHTML = "Loading...";
-        (async function(){
-        const isF = await isFollow('{{ view_profile.id }}');
-        //console.log(isF);    
-        if(isF){
-            document.querySelector('#btn-follow').innerHTML = "Unfollow";
-            console.log('Unfollow btn loaded');}
-        else{
-            document.querySelector('#btn-follow').innerHTML = "Follow";
-            console.log('Follow btn loaded'); }
-        })()
-
-        function actFollow(id){
-    console.log('Boton de accion *Follow/Un* fue apretado');
-    fetch(`/actFollow/${id}`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({id : id}),
-        })      
-      .then(response => response.json())
-      .then(response => {
-        //console.log('Resultado:  '+response.message);
-        location.reload();
-    })
-    .catch(error => console.error('Error:', error));
     
-};   
+        (async function(){
+            const isF = await isFollow('{{ view_profile.id }}');
+            
+            //console.log(isF);    
+            if(isF){
+                document.querySelector('#btn-follow').innerHTML = "Unfollow";
+                console.log('Unfollow btn loaded');}
+            else{
+                document.querySelector('#btn-follow').innerHTML = "Follow";
+                console.log('Follow btn loaded'); }
+            }
+        )();            
     </script>
 {% endif %}
     </div>
@@ -52,8 +38,19 @@
 {% for post in posts %}
 <div class="each-post">
     <a class="writed_by">{{post.writed_by}}</a> @ <time>{{post.timestamp}}</time>
-    <a>{{post.like_post.count}}</a><button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
-<br>
+    <a>{{post.like_post.count}}</a><button id="btn-like-{{post.id}}" class="btn "></button>
+<script>
+    (async function(){
+        const isL = await isLike('{{ post.id }}');
+        console.log('Post '+'{{ post.id }}'+' is '+isL);    
+        if(isL){
+            document.querySelector("#btn-like-{{post.id}}").className = 'btn bi bi-heart' ;}
+        else{
+            document.querySelector("#btn-like-{{post.id}}").className = 'btn bi bi-heart-fill' ;
+        }
+    })();
+</script>
+    <br>
     <span class="post_message">{{post.post_message}}</span>
     {% if view_profile == request.user %}
     <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="editPost('{{post.id}}');"></button>
@@ -61,5 +58,11 @@
     
 </div>
 {% endfor %}
+
+
+
+
+    
+        
 
 {% endblock %}

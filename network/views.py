@@ -141,7 +141,7 @@ def isLiked(request, post_id):
         try:
             Like.objects.get(like_user=request.user, like_post=post)
             return JsonResponse({"response": True}, status=200)
-        except Following.DoesNotExist:
+        except Like.DoesNotExist:
             return JsonResponse({"response": False}, status=200)
             
 
