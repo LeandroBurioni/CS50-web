@@ -19,7 +19,7 @@ class Post(models.Model):
 
 class Like(models.Model):
     like_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
-    like_post = models.ForeignKey(Post, on_delete=models.CASCADE, null=False)
+    like_post = models.ForeignKey(Post, on_delete=models.CASCADE, null=False, related_name="like_post")
     
     class Meta:
         unique_together = ('like_user', 'like_post')

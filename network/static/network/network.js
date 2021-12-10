@@ -13,6 +13,16 @@ async function isFollow(id){ //Return true o False
     
 };
 
+async function isLike(id){ //Return true o False
+    const response = await fetch(`/isLike/${id}`)
+    const resp = await response.json()
+    //console.log(response);
+    //console.log(resp);
+    console.log('Inside the js function is: '+ resp.response);
+    return await Promise.resolve(resp.response); //Tiene que estar, sino Undef
+    
+};
+
 function edit(post, text){
     fetch(`/edit/${post}/${text}`, {
         method: 'POST',

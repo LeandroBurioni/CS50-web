@@ -52,7 +52,7 @@
 {% for post in posts %}
 <div class="each-post">
     <a class="writed_by">{{post.writed_by}}</a> @ <time>{{post.timestamp}}</time>
-    <button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
+    <a>{{post.like_post.count}}</a><button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
 <br>
     <span class="post_message">{{post.post_message}}</span>
     {% if view_profile == request.user %}

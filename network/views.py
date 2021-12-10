@@ -126,6 +126,23 @@ def isFollowing(request, user_id):
             return JsonResponse({"response": True}, status=200)
         except Following.DoesNotExist:
             return JsonResponse({"response": False}, status=200)
+
+@csrf_exempt
+def isLiked(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Post not existing."}, status=404)
+
+    if request.method != "GET":
+        return JsonResponse({"error": "It's not GET method! :|"}, status=400)
+    else:
+        #If user exists, check if is follower
+        try:
+            Like.objects.get(like_user=request.user, like_post=post)
+            return JsonResponse({"response": True}, status=200)
+        except Following.DoesNotExist:
+            return JsonResponse({"response": False}, status=200)
             
 
 
