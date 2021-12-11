@@ -172,6 +172,26 @@ def action_follow(request, user_id):
 
 @csrf_exempt
 @login_required(login_url='login')
+def action_like(request, post_id):
+    if request.method == "POST":
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "Post not existing."}, status=400)
+        #User exist
+        try:
+            Like.objects.get(like_post=post, like_user=request.user).delete()
+            return JsonResponse({"message": 'Unliked the post {{post_id}}'},status=200)
+        except Like.DoesNotExist:
+            post_liked = Like.objects.create(like_post=post, like_user=request.user)
+            post_liked.save()
+            return JsonResponse({"message": "Liked the post {{post_id}}"},status=200)
+        
+    return JsonResponse({"message": "Can only post to method"}, status=400)
+
+
+@csrf_exempt
+@login_required(login_url='login')
 def edit_post(request, post_id, post_message):
     if request.method == 'POST':
         try:

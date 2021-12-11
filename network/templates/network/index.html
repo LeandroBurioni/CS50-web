@@ -22,7 +22,18 @@
 
 <div class="each-post">
     <a class="writed_by" href="{% url 'profile' post.writed_by%}">{{post.writed_by}}</a> @ <time>{{post.timestamp}}</time>
-    <a>{{post.like_post.count}}</a><button class="btn bi bi-heart-fill"></button><button class="btn bi bi-heart"></button>
+    <a>{{post.like_post.count}}</a><button id="btn-like-{{post.id}}" class="btn " onclick="actLike('{{post.id}}')"></button>
+    <script>
+        (async function(){
+            const isL = await isLike('{{ post.id }}');
+            console.log('Post '+'{{ post.id }}'+' is '+isL);    
+            if(isL){
+                document.querySelector("#btn-like-{{post.id}}").className = 'btn bi bi-heart' ;}
+            else{
+                document.querySelector("#btn-like-{{post.id}}").className = 'btn bi bi-heart-fill' ;
+            }
+        })();
+    </script>
 <br>
     <span class="post_message">{{post.post_message}}</span>
     {% if post.writed_by == request.user %}

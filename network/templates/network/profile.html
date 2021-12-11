@@ -38,7 +38,7 @@
 {% for post in posts %}
 <div class="each-post">
     <a class="writed_by">{{post.writed_by}}</a> @ <time>{{post.timestamp}}</time>
-    <a>{{post.like_post.count}}</a><button id="btn-like-{{post.id}}" class="btn "></button>
+    <a>{{post.like_post.count}}</a><button id="btn-like-{{post.id}}" class="btn " onclick="actLike('{{post.id}}')"></button>
 <script>
     (async function(){
         const isL = await isLike('{{ post.id }}');

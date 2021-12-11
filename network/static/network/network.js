@@ -45,6 +45,18 @@ function actFollow(id){
         //console.log('Resultado:  '+response.message);
         location.reload();})
     .catch(error => console.error('Error:', error));
-    
-    
+};  
+
+function actLike(id){
+    //console.log('User hit the Follow/Unfollow button');
+    fetch(`/actLike/${id}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({id : id}),
+        })      
+      .then(response => response.json())
+      .then(response => {
+        //console.log('Resultado:  '+response.message);
+        location.reload();})
+    .catch(error => console.error('Error:', error));
 };  
