@@ -189,15 +189,17 @@ def action_like(request, post_id):
         
     return JsonResponse({"message": "Can only post to method"}, status=400)
 
+#path("getPost/<int:post_id>", views.get_post, name="getPost"),
+#path("putPost/<int:post_id>", views.put_post, name="putPost")
 
 @csrf_exempt
 @login_required(login_url='login')
-def edit_post(request, post_id, post_message):
-    if request.method == 'POST':
-        try:
-            post = Post.objects.get(id=post_id)
-        except Post.DoesNotExist:
-            return JsonResponse({"error": "Couldnt edit a NO EXISTING POST."}, status=400)
+def put_post(request, post_id, post_message):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "Couldnt edit a NO EXISTING POST."}, status=400)
+    if request.method == 'PUT':
         if request.user != post.writed_by:
             return JsonResponse({"error": "It`s NOT YOUR POST."}, status=400)
         else:

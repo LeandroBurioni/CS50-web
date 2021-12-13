@@ -1,8 +1,11 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-{% if user.is_authenticated %}
-    <br>
+{% if not user.is_authenticated %}
+<h2> Create an account and start to enjoy!</h2>    
+{% else %}
+
+<br>
     <form action="{% url 'index' %}" method="POST">
         {% csrf_token %}
         {{ post_form.as_p}}
@@ -10,9 +13,6 @@
     </form>
     <hr>
 
-{% else %}
-<h2> Create an account and start posting!</h2>
-{% endif %}
 {% if posts|length == 0 %}
 <h1>There is any post. Start following someone, or make the first post ever!</h1>
 {% else %}
@@ -37,7 +37,7 @@
 <br>
     <span class="post_message">{{post.post_message}}</span>
     {% if post.writed_by == request.user %}
-    <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="console.log(editPost('{{post.id}}'));"></button>
+    <button class="btn btn-secondary bi bi-pencil-fill edit" onclick="editPost('{{post.id}}')"></button>
     {% endif %}
 </div>
 {% endfor %}
@@ -60,4 +60,26 @@
     </span>
 </div>
 {% endif %}
+
+{% endif %}
+
+<div class="modal" tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editing...</h5>
+          <button type="button" class="btn-close" onclick="document.querySelector('.modal').style.display = 'none';"></button>
+        </div>
+        <div class="modal-body">
+          <textarea class="edit_message" cols="30" rows="2" maxlength="150"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="document.querySelector('.modal').style.display = 'none';">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
 {% endblock %}

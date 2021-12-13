@@ -20,19 +20,6 @@ async function isLike(id){ //Return true o False
     
 };
 
-function edit(post, text){
-    fetch(`/edit/${post}/${text}`, {
-        method: 'POST',
-        body: JSON.stringify({
-            post_message : text,
-        })
-      })
-    .then(response => response.json())
-    .then( data => {
-        console.log("Edit function responsed -> "+data);
-    })
-}
-
 function actFollow(id){
     //console.log('User hit the Follow/Unfollow button');
     fetch(`/actFollow/${id}`, {
@@ -60,3 +47,36 @@ function actLike(id){
         location.reload();})
     .catch(error => console.error('Error:', error));
 };  
+
+function editPost(post){
+    document.querySelector(".modal").style.display = 'block';
+    
+    document.querySelector(".edit_message").value = "Aca tiene que ir old_txt";
+    
+}
+
+function get_post(post){
+    fetch(`/edit/${post}/${text}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            post_message : text,
+        })
+      })
+    .then(response => response.json())
+    .then( data => {
+        console.log("Edit function responsed -> "+data);
+    })
+}
+
+function put_post(post, text){
+    fetch(`/edit/${post}/${text}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            post_message : text,
+        })
+      })
+    .then(response => response.json())
+    .then( data => {
+        console.log("Edit function responsed -> "+data);
+    })
+}

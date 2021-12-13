@@ -16,6 +16,7 @@ urlpatterns = [
     path("isLike/<int:post_id>", views.isLiked, name="isLiked"),
     path("actFollow/<int:user_id>", views.action_follow, name="Follow"),
     path("actLike/<int:post_id>", views.action_like, name="Like"),
-    path("edit/<int:post_id>/<str:message>", views.edit_post, name="Edit")
+    #path("getPost/<int:post_id>", views.get_post, name="getPost"),
+    #path("putPost/<int:post_id>", views.put_post, name="putPost")
 
 ]
