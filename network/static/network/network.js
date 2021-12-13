@@ -48,25 +48,24 @@ function actLike(id){
     .catch(error => console.error('Error:', error));
 };  
 
+
 function editPost(post){
+    (async function(){
+        const txt =  await get_Post(post);
+        document.querySelector(".edit_message").value = txt;    
+    })();
+    
     document.querySelector(".modal").style.display = 'block';
     
-    document.querySelector(".edit_message").value = "Aca tiene que ir old_txt";
     
 }
 
-function get_post(post){
-    fetch(`/edit/${post}/${text}`, {
-        method: 'POST',
-        body: JSON.stringify({
-            post_message : text,
-        })
-      })
-    .then(response => response.json())
-    .then( data => {
-        console.log("Edit function responsed -> "+data);
-    })
-}
+async function get_Post(id){ //Return true o False
+    const response = await fetch(`/getPost/${id}`)
+    const resp = await response.json()
+    return await Promise.resolve(resp.post_message); 
+    console.log(resp.post);
+};
 
 function put_post(post, text){
     fetch(`/edit/${post}/${text}`, {

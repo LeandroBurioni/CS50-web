@@ -16,6 +16,13 @@ class Post(models.Model):
 
     def __str__(self):
         return f"#{self.id} {self.writed_by} ${self.post_message} // {self.timestamp} "
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "post_message": self.post_message
+        }
 
 class Like(models.Model):
     like_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
