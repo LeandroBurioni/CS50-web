@@ -22,7 +22,7 @@ def index(request):
             return HttpResponseRedirect(reverse("index"))
     else:
         all_posts = Post.objects.all().order_by('-timestamp')
-        paginator = Paginator(all_posts, 5)
+        paginator = Paginator(all_posts, 10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         return render(request, "network/index.html",  {"post_form": forms.PostForm(), "posts": page_obj})
