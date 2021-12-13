@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
    
 });
 
+function closeModal(){
+    document.querySelector('.modal').style.display = 'none';
+    document.querySelector(".edit_message").value = '';
+}
+
 async function isFollow(id){ //Return true o False
     const response = await fetch(`/isFollow/${id}`)
     const resp = await response.json()
@@ -56,26 +61,36 @@ function editPost(post){
     })();
     
     document.querySelector(".modal").style.display = 'block';
-    
+    document.querySelector("#savePost").addEventListener('click', ()=>{
+        savePost(post);
+        closeModal();
+        location.reload();
+    });
     
 }
 
+function savePost(id){
+    console.log("Save con parametro "+id);
+    const txt = document.querySelector(".edit_message").value;
+    console.log(`./editPost/${id}`);
+    fetch(`editPost/${id}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({'post_message' : txt}),
+        })      
+      .then(response => response.json())
+      .then(response => {
+        console.log('Resultado:  '+response.message);
+        })
+    
+    
+
+}
+
+
 async function get_Post(id){ //Return true o False
-    const response = await fetch(`/getPost/${id}`)
+    const response = await fetch(`/editPost/${id}`)
     const resp = await response.json()
     return await Promise.resolve(resp.post_message); 
     console.log(resp.post);
 };
-
-function put_post(post, text){
-    fetch(`/edit/${post}/${text}`, {
-        method: 'POST',
-        body: JSON.stringify({
-            post_message : text,
-        })
-      })
-    .then(response => response.json())
-    .then( data => {
-        console.log("Edit function responsed -> "+data);
-    })
-}

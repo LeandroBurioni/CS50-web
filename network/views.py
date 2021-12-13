@@ -1,7 +1,8 @@
 from django import forms
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -191,31 +192,19 @@ def action_like(request, post_id):
 
 @csrf_exempt
 @login_required(login_url='login')
-def get_post(request, post_id):
+def edit_post(request, post_id):
     try:
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         return JsonResponse({"error": "Couldnt edit a NO EXISTING POST."}, status=400)
-    if request.method == 'GET':
-        if request.user != post.writed_by:
+    if request.user != post.writed_by:
             return JsonResponse({"error": "It`s NOT YOUR POST."}, status=400)
-        else:
+    else:
+        if request.method == 'GET':
             return JsonResponse(post.serialize())
-    return JsonResponse({"error": "Only GET method allowed."}, status=400)
-
-#path("putPost/<int:post_id>", views.put_post, name="putPost")
-@csrf_exempt
-@login_required(login_url='login')
-def put_post(request, post_id, post_message):
-    try:
-        post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        return JsonResponse({"error": "Couldnt edit a NO EXISTING POST."}, status=400)
-    if request.method == 'PUT':
-        if request.user != post.writed_by:
-            return JsonResponse({"error": "It`s NOT YOUR POST."}, status=400)
-        else:
-            post.post_message = post_message
+        elif request.method == 'POST':
+            data = json.loads(request.body)
+            post.post_message = data.get("post_message")
             post.save()
-            return JsonResponse({"message": "Post modified successfully."}, status=200)
-    return JsonResponse({"error": "Only PUT method allowed."}, status=400)
+            return JsonResponse({"message": "Post edited successfully."}, status=200)
+    return JsonResponse({"error": "Only GET method allowed."}, status=400)
